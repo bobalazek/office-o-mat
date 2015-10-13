@@ -38,13 +38,10 @@ Database
 
 Administrator login
 -------------------
-With the `bin/console application:database:hydrate-data` command, you will, per default hydrate 2 users (which you can change inside the `app/fixtures/users.php` file):
+With the `bin/console application:database:hydrate-data` command, you will, per default hydrate 1 user (which you can change inside the `app/fixtures/users.php` file):
 
 * Admin User (with admin permissions)
     * Username: `admin` or `admin@myapp.com`
-    * Password: `test`
-* Test User (with the default user permissions)
-    * Username: `test` or `test@myapp.com`
     * Password: `test`
 
 Commands

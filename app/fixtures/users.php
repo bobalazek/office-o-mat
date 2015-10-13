@@ -15,19 +15,7 @@ return array(
         'roles' => array(
             'ROLE_SUPER_ADMIN',
             'ROLE_ADMIN',
-        ),
-    ),
-    array(
-        'id' => 2,
-        'username' => 'test',
-        'email' => 'test@myapp.com',
-        'plainPassword' => 'test',
-        'profile' => array(
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-        ),
-        'roles' => array(
-            'ROLE_TESTER',
+            'ROLE_EMPLOYER',
         ),
     ),
 );
