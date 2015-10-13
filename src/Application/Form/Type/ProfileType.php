@@ -43,6 +43,11 @@ class ProfileType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('role', 'text', array(
+            'label' => 'Role / Occupation',
+            'required' => false,
+        ));
+
         $builder->add('image', 'file', array(
             'required' => false,
         ));

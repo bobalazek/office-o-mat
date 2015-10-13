@@ -64,6 +64,15 @@ class ProfileEntity
     protected $gender;
 
     /**
+     * What role / job / ocupation is this person doing?
+     *
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=64, nullable=true)
+     */
+    protected $role;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="birthdate", type="datetime", nullable=true)
@@ -181,6 +190,19 @@ class ProfileEntity
     public function setGender($gender)
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    /*** Role ***/
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    public function setRole($role)
+    {
+        $this->role = $role;
 
         return $this;
     }
