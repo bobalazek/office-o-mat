@@ -3,13 +3,13 @@
 return array(
     'environment' => 'development',
     'debug' => true,
-    'name' => 'Web Application Starter Kit',
-    'version' => '0.4',
+    'name' => 'Office-O-Mat',
+    'version' => '0.1',
     'author' => 'Borut Balazek',
 
     // Admin email (& name)
     'email' => 'info@bobalazek.com',
-    'emailName' => 'Web Application Starter Kit Mailer',
+    'emailName' => 'Office-O-Mat Mailer',
 
     // Default Locale / Language stuff
     'locale' => 'en_US', // Default locale

@@ -1,8 +1,8 @@
 {
     "type": "project",
-    "name": "bobalazek/web-application-starter-kit",
-    "description": "An Web Application starter kit / boilerplate by Borut Balazek - build on Silex",
-    "version": "0.4",
+    "name": "bobalazek/office-o-mat",
+    "description": "Office-O-Mat by Borut Balazek",
+    "version": "0.1",
     "license": "MIT",
     "authors": [
         {
