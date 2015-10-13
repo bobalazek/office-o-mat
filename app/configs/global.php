@@ -57,9 +57,9 @@ return array(
         'default' => array(
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
-            'dbname' => 'wask',
-            'user' => 'wask',
-            'password' => 'wask',
+            'dbname' => 'office_o_mat',
+            'user' => 'office_o_mat',
+            'password' => 'office_o_mat',
             'charset' => 'utf8',
         ),
     ),
