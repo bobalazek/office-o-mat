@@ -27,7 +27,7 @@ class WorkingTimeEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="notes", type="text")
+     * @ORM\Column(name="notes", type="text", nullable=true)
      */
     protected $notes;
 
