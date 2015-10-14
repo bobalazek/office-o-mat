@@ -56,3 +56,15 @@ Application\Entity\UserEntity:
                 groups: [ new, settingsPassword, resetPasswordReset ]
         profile:
             - Valid: ~
+
+Application\Entity\WorkingTimeEntity:
+    getters:
+        timeEndedAfterTimeStarted:
+            - 'True':
+                message: errors.workingTime.timeEnded.mustBeAfterTheTimeStarted
+                groups: [ newAndEdit ]
+    properties:
+        timeStarted:
+            - NotBlank:
+                message: errors.workingTime.timeStarted.notBlank
+                groups: [ newAndEdit ]

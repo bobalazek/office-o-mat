@@ -10,10 +10,16 @@ class WorkingTimeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('timeStarted', 'datetime');
+        $years = array(2015, 2016);
+
+        $builder->add('timeStarted', 'datetime', array(
+            'years' => $years,
+            'data' => new \Datetime('now'),
+        ));
 
         $builder->add('timeEnded', 'datetime', array(
             'required' => false,
+            'years' => $years,
         ));
 
         $builder->add('user', 'entity', array(

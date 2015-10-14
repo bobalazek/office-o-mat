@@ -100,6 +100,18 @@ class WorkingTimeEntity
         return $this;
     }
 
+    public function isTimeEndedAfterTimeStarted()
+    {
+        $timeStarted = $this->getTimeStarted();
+        $timeEnded = $this->getTimeEnded();
+
+        if ($timeEnded) {
+            return $timeStarted < $timeEnded;
+        }
+
+        return true;
+    }
+
     /*** Time created ***/
     public function getTimeCreated()
     {
