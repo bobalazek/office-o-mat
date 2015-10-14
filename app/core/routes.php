@@ -38,6 +38,12 @@ $app->mount(
     new Application\ControllerProvider\MembersArea\RolesControllerProvider()
 );
 
+/******** Working Times ********/
+$app->mount(
+    '/members-area/working-times',
+    new Application\ControllerProvider\MembersArea\WorkingTimesControllerProvider()
+);
+
 /******** Posts ********/
 $app->mount(
     '/members-area/posts',

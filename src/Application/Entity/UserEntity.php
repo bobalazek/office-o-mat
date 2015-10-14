@@ -154,6 +154,13 @@ class UserEntity
      */
     protected $posts;
 
+    /**
+     * @var Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Application\Entity\WorkingTimeEntity", mappedBy="user", cascade={"all"})
+     */
+    protected $workingTimes;
+
     /***** Other Variables *****/
     protected $expired = false; // userExpired / accountExpired
     protected $credentialsExpired = false;
@@ -559,6 +566,19 @@ class UserEntity
     public function setPosts($posts)
     {
         $this->posts = $posts;
+
+        return $this;
+    }
+
+    /*** Working Times ***/
+    public function getWorkingTimes()
+    {
+        return $this->workingTimes;
+    }
+
+    public function setWorkingTimes($workingTimes)
+    {
+        $this->workingTimes = $workingTimes;
 
         return $this;
     }

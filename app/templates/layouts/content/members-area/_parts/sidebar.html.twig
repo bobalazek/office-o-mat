@@ -22,6 +22,14 @@
 			</a>
 		</li>
 	{% endif %}
+	{% if is_granted('ROLE_WORKING_TIMES_EDITOR') or is_granted('ROLE_ADMIN') %}
+		<li class="{{ path('members-area.working-times') in app.currentUri ? 'active' : '' }}" role="presentation">
+			<a href="{{ url('members-area.working-times') }}">
+				<i class="fa fa-fw fa-clock-o"></i>
+				{{ 'Working Times'|trans }}
+			</a>
+		</li>
+	{% endif %}
 	{% if is_granted('ROLE_POSTS_EDITOR') or is_granted('ROLE_ADMIN') %}
 		<li class="{{ path('members-area.posts') in app.currentUri ? 'active' : '' }}" role="presentation">
 			<a href="{{ url('members-area.posts') }}">
