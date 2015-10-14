@@ -22,6 +22,10 @@ class WorkingTimeType extends AbstractType
             'years' => $years,
         ));
 
+        $builder->add('notes', 'textarea', array(
+            'required' => false,
+        ));
+
         $builder->add('user', 'entity', array(
             'required' => false,
             'empty_value' => false,

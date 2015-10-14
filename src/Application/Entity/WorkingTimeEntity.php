@@ -25,6 +25,13 @@ class WorkingTimeEntity
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="notes", type="text")
+     */
+    protected $notes;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="time_started", type="datetime")
@@ -70,6 +77,19 @@ class WorkingTimeEntity
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /*** Notes ***/
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
 
         return $this;
     }
