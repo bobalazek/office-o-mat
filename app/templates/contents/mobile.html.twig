@@ -4,20 +4,52 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link id="mobile-css" rel="stylesheet" href="{{ app.baseUrl }}/assets/stylesheets/mobile.css?version={{ app.version }}" />
+    <link id="angular-toastr-css"
+        rel="stylesheet"
+        href="{{ app.baseUrl }}/assets/vendor/angular-toastr/dist/angular-toastr.min.css" />
+    <link id="mobile-css"
+        rel="stylesheet"
+        href="{{ app.baseUrl }}/assets/stylesheets/mobile.css?version={{ app.version }}" />
 {% endblock %}
 
 {% block head_javascripts %}
     {{ parent() }}
-    <script id="angular-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular/angular.min.js"></script>
-    <script id="angular-animate-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-animate/angular-animate.min.js"></script>
-    <script id="angular-cookies-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-cookies/angular-cookies.min.js"></script>
-    <script id="angular-ui-router-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script id="angular-ui-bootstrap-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
-    <script id="angular-ui-bootstrap-tpls-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script id="mobile-application-bootstrap-js" type="text/javascript" src="{{ app.baseUrl }}/assets/app/mobile-application/bootstrap.js"></script>
-    <script id="mobile-application-home-js" type="text/javascript" src="{{ app.baseUrl }}/assets/app/mobile-application/modules/home/home.js"></script>
-    <script id="mobile-application-login-js" type="text/javascript" src="{{ app.baseUrl }}/assets/app/mobile-application/modules/login/login.js"></script>
+    <script id="angular-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular/angular.min.js"></script>
+    <script id="angular-animate-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-animate/angular-animate.min.js"></script>
+    <script id="angular-cookies-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-cookies/angular-cookies.min.js"></script>
+    <script id="angular-ui-router-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script id="angular-ui-bootstrap-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script id="angular-ui-bootstrap-tpls-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script id="angular-toastr-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-toastr/dist/angular-toastr.min.js"></script>
+    <script id="angular-toastr-tpls-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+    <script id="mobile-application-bootstrap-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/app/mobile-application/bootstrap.js"></script>
+    <script id="mobile-application-home-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/app/mobile-application/modules/home/home.js"></script>
+    <script id="mobile-application-login-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/app/mobile-application/modules/login/login.js"></script>
+    <script id="mobile-application-dashboard-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/app/mobile-application/modules/dashboard/dashboard.js"></script>
 {% endblock %}
 
 {% block body %}

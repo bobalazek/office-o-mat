@@ -19,6 +19,13 @@ class ApiControllerProvider
         ->bind('api');
 
         $controllers->match(
+            '/me',
+            'Application\Controller\ApiController::meAction'
+        )
+        ->bind('api.me');
+
+        /***** Mobile *****/
+        $controllers->match(
             '/mobile',
             'Application\Controller\ApiController::mobileAction'
         )
@@ -29,6 +36,12 @@ class ApiControllerProvider
             'Application\Controller\ApiController::mobileEmployeesAction'
         )
         ->bind('api.mobile.employees');
+
+        $controllers->match(
+            '/mobile/login/employee',
+            'Application\Controller\ApiController::mobileLoginEmployeeAction'
+        )
+        ->bind('api.mobile.login.employee');
 
         return $controllers;
     }

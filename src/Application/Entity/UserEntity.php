@@ -113,6 +113,20 @@ class UserEntity
     protected $activationCode;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="pin_number", type="integer")
+     */
+    protected $pinNumber;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="time_access_token_expires", type="datetime", nullable=true)
+     */
+    protected $timeAccessTokenExpires;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="time_last_active", type="datetime", nullable=true)
@@ -191,6 +205,10 @@ class UserEntity
 
         $this->setResetPasswordCode(
             md5(uniqid(null, true))
+        );
+
+        $this->setPinNumber(
+            rand(1000, 9999)
         );
 
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
@@ -404,7 +422,7 @@ class UserEntity
         return $this;
     }
 
-    /*** Activate account code ***/
+    /*** Activation code ***/
     public function getActivationCode()
     {
         return $this->activationCode;
@@ -413,6 +431,32 @@ class UserEntity
     public function setActivationCode($activationCode)
     {
         $this->activationCode = $activationCode;
+
+        return $this;
+    }
+
+    /*** PIN Number ***/
+    public function getPinNumber()
+    {
+        return $this->pinNumber;
+    }
+
+    public function setPinNumber($pinNumber)
+    {
+        $this->pinNumber = $pinNumber;
+
+        return $this;
+    }
+
+    /*** Time access token expires ***/
+    public function getTimeAccessTokenExpires()
+    {
+        return $this->timeAccessTokenExpires;
+    }
+
+    public function setTimeAccessTokenExpires(\DateTime $timeAccessTokenExpires = null)
+    {
+        $this->timeAccessTokenExpires = $timeAccessTokenExpires;
 
         return $this;
     }

@@ -22,7 +22,9 @@ class UserType extends AbstractType
         $builder->add('username', 'text', array(
             'required' => false,
         ));
+
         $builder->add('email', 'email');
+
         $builder->add('plainPassword', 'repeated', array(
             'type' => 'password',
             'first_name' => 'password',
@@ -30,6 +32,8 @@ class UserType extends AbstractType
             'required' => false,
             'invalid_message' => 'errors.user.password.invalidText',
         ));
+
+        $builder->add('pinNumber', 'number');
 
         $builder->add('roles', 'entity', array(
             'required' => false,

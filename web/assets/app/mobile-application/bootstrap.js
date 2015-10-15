@@ -4,6 +4,7 @@ angular
         [
             'mobileApplication.home',
             'mobileApplication.login',
+            'mobileApplication.dashboard',
         ]
     )
     .config( function($urlRouterProvider) {

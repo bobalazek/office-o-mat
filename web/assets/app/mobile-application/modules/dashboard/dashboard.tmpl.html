@@ -1,0 +1,6 @@
+<div id="dashboard-controller"
+    class="container text-center"
+    ng-controller="DashboardController as dashboardScope"
+    style="padding: 20px 0;">
+    <ng-include src="'assets/app/mobile-application/modules/dashboard/dashboard-'+dashboardScope.type+'.tmpl.html'"></ng-include>
+</div>

@@ -2,8 +2,11 @@ angular
     .module(
         'mobileApplication.login',
         [
+            'ngAnimate',
+            'ngCookies',
             'ui.router',
             'ui.bootstrap',
+            'toastr',
         ]
     )
     .config( function($stateProvider) {
@@ -16,7 +19,7 @@ angular
     })
     .controller (
         'LoginController',
-        function LoginController($rootScope, $scope, $state, $stateParams, $http) {
+        function LoginController($rootScope, $scope, $state, $stateParams, $http, $cookies, toastr) {
             var vm = this;
 
             vm.type = $stateParams.type;
@@ -30,8 +33,10 @@ angular
             vm.employeesListShown = true;
             vm.employeesLoginFormShown = false;
             vm.employeeSelected = null;
+            vm.employeePinNumber = '';
             vm.employeeSelectForLogin = employeeSelectForLogin;
             vm.employeeLoginCancel = employeeLoginCancel;
+            vm.employeeLogin = employeeLogin;
 
             // Logic & stuff
             if (vm.type == 'employee') {
@@ -42,8 +47,9 @@ angular
                     var data = response.data;
 
                     vm.employees = data.employees;
-                }, function() {
-                    console.log('Something Failed!');
+                }, function(response) {
+                    console.log('Error');
+                    console.log(response);
                 });
             }
 
@@ -57,6 +63,41 @@ angular
                 vm.employeeSelected = null;
                 vm.employeesListShown = true;
                 vm.employeesLoginFormShown = false;
+            }
+
+            function employeeLogin() {
+                $http({
+                    method: 'POST',
+                    url: 'api/mobile/login/employee',
+                    data: 'user_id='+vm.employeeSelected.id+'&pin_number='+vm.employeePinNumber,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then(function(response) {
+                    var data = response.data;
+
+                    toastr.success(
+                        'You have successfully logged in!'
+                    );
+
+                    var expiresDate = new Date(data.time_access_token_expires);
+
+                    $cookies.putObject(
+                        'employee',
+                        data,
+                        {
+                            expires: expiresDate,
+                        }
+                    );
+
+                    $state.go('dashboard', { type: 'employee' });
+                }, function(response) {
+                    var data = response.data;
+
+                    toastr.error(
+                        data.error.message
+                    );
+                });
             }
             // Employee /END
 

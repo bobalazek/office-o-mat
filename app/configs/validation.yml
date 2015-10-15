@@ -56,6 +56,15 @@ Application\Entity\UserEntity:
                 groups: [ new, settingsPassword, resetPasswordReset ]
         profile:
             - Valid: ~
+        pinNumber:
+            - LessThanOrEqual:
+                value: 9999
+                message: errors.user.pinNumber.lessThanOrEqual
+                groups: [ new, edit, settings ]
+            - GreaterThanOrEqual:
+                value: 1000
+                message: errors.user.pinNumber.greaterThanOrEqual
+                groups: [ new, edit, settings ]
 
 Application\Entity\WorkingTimeEntity:
     getters:
