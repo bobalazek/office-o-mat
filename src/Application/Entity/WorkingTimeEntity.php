@@ -32,6 +32,13 @@ class WorkingTimeEntity
     protected $notes;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="location", type="text", nullable=true)
+     */
+    protected $location;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="time_started", type="datetime")
@@ -90,6 +97,19 @@ class WorkingTimeEntity
     public function setNotes($notes)
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    /*** Location ***/
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    public function setLocation($location)
+    {
+        $this->location = $location;
 
         return $this;
     }

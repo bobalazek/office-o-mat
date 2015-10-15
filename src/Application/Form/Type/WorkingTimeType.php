@@ -26,6 +26,10 @@ class WorkingTimeType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('location', 'textarea', array(
+            'required' => false,
+        ));
+
         $builder->add('user', 'entity', array(
             'required' => false,
             'empty_value' => false,

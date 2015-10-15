@@ -32,6 +32,7 @@
 					<th>{{ paginator_sortable(pagination, 'Time Started', 'wt.timeStarted') }}</th>
 					<th>{{ paginator_sortable(pagination, 'Time Ended', 'wt.timeEnded') }}</th>
 					<th>{{ paginator_sortable(pagination, 'Notes', 'wt.notes') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Location', 'wt.location') }}</th>
 					<th>{{ paginator_sortable(pagination, 'Time Created', 'wt.timeCreated') }}</th>
 					<th>{{ paginator_sortable(pagination, 'Time Updated', 'wt.timeUpdated') }}</th>
 					<th width="100">{{ 'Actions'|trans }}</th>
@@ -45,6 +46,7 @@
 							? workingTime.getTimeEnded()|date(app.dateTimeFormat)
 							: '' }}</td>
 						<td>{{ workingTime.getNotes() }}</td>
+						<td>{{ workingTime.getLocation() }}</td>
 						<td>{{ workingTime.getTimeCreated()|date(app.dateTimeFormat) }}</td>
 						<td>{{ workingTime.getTimeUpdated()|date(app.dateTimeFormat) }}</td>
 						<td>

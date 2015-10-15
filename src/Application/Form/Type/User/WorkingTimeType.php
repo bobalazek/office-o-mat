@@ -26,6 +26,10 @@ class WorkingTimeType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('location', 'textarea', array(
+            'required' => false,
+        ));
+
         $builder->add('Save', 'submit', array(
             'attr' => array(
                 'class' => 'btn-primary btn-lg btn-block',
