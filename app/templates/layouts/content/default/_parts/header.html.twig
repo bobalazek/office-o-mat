@@ -93,6 +93,12 @@
 									</a>
 								</li>
 								<li class="divider"></li>
+								<li class="{{ path('members-area.my.working-times') == app.currentUri ? 'active' : '' }}">
+									<a href="{{ url('members-area.my.working-times') }}">
+										{{ 'Working Times'|trans }}
+									</a>
+								</li>
+								<li class="divider"></li>
 								<li>
 									<a href="{{ app.logoutUrl }}">
 										{{ 'Logout'|trans }}

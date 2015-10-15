@@ -1,0 +1,28 @@
+{% extends 'layouts/content/members-area.html.twig' %}
+
+{% block title %}{{ 'New'|trans }} | {{ 'Working Times'|trans }} | {{ 'My'|trans }} | {{ parent() }}{% endblock %}
+
+{% block main %}
+	<h1>{{ 'New Working Time'|trans }}</h1>
+	<ol class="breadcrumb">
+		<li>
+			<a href="{{ url('members-area') }}">
+				{{ 'Home' | trans }}
+			</a>
+		</li>
+        <li>
+			<a href="{{ url('members-area.my') }}">
+				{{ 'My' | trans }}
+			</a>
+		</li>
+		<li>
+			<a href="{{ url('members-area.my.working-times') }}">
+				{{ 'Working Times' | trans }}
+			</a>
+		</li>
+		<li class="active">
+			{{ 'New' | trans }}
+		</li>
+	</ol>
+	{{ form(form) }}
+{% endblock %}
