@@ -18,6 +18,18 @@ class ApiControllerProvider
         )
         ->bind('api');
 
+        $controllers->match(
+            '/mobile',
+            'Application\Controller\ApiController::mobileAction'
+        )
+        ->bind('api.mobile');
+
+        $controllers->match(
+            '/mobile/employees',
+            'Application\Controller\ApiController::mobileEmployeesAction'
+        )
+        ->bind('api.mobile.employees');
+
         return $controllers;
     }
 }

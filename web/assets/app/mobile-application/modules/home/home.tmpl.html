@@ -1,0 +1,30 @@
+<div id="home-controller" 
+    class="container text-center"
+    ng-controller="HomeController as homeScope">
+    <h2>Hello and Welcome to</h2>
+    <h1>Office-O-Mat Mobile</h1>
+    <p>Please select your action below:</p>
+    <div class="row">
+        <div class="col-sm-4">
+            <a class="btn btn-block btn-lg btn-default"
+                ui-sref="login({ type: 'client' })">
+                <b>Client</b> <br />
+                Login
+            </a>
+        </div>
+        <div class="col-sm-4">
+            <a class="btn btn-block btn-lg btn-default"
+                ui-sref="login({ type: 'employee' })">
+                <b>Employee</b> <br />
+                Login
+            </a>
+        </div>
+        <div class="col-sm-4">
+            <a class="btn btn-block btn-lg btn-default"
+                ui-sref="login({ type: 'visitor' })">
+                <b>Visitor</b> <br />
+                Login
+            </a>
+        </div>
+    </div>
+</div>

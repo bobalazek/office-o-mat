@@ -15,22 +15,16 @@
     <script id="angular-ui-router-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script id="angular-ui-bootstrap-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
     <script id="angular-ui-bootstrap-tpls-js" type="text/javascript" src="{{ app.baseUrl }}/assets/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script id="mobile-application-bootstrap-js" type="text/javascript" src="{{ app.baseUrl }}/assets/app/mobile-application/bootstrap.js"></script>
+    <script id="mobile-application-home-js" type="text/javascript" src="{{ app.baseUrl }}/assets/app/mobile-application/modules/home/home.js"></script>
+    <script id="mobile-application-login-js" type="text/javascript" src="{{ app.baseUrl }}/assets/app/mobile-application/modules/login/login.js"></script>
 {% endblock %}
 
-{% block header %}<!-- Not sure yet, so keep blank for now -->{% endblock %}
-
-{% block main %}
-    <div class="text-center">
-    	<h1>{{ 'Welcome to Corcosoft'|trans }}</h1>
-    	<p>
-    	    {{ 'Please select an action below'|trans }}:
-    	</p>
-        <div class="row">
-            <div class="col-md-4">
-                <
-            </div>
-        </div>
-    </div>
+{% block body %}
+    <div id="mobile-application"
+        role="application"
+        ng-app="mobileApplication"
+        ng-controller="MobileApplicationController as mobileApplicationScope">
+        <div id="mobile-application-content" ui-view></div>
+    </div> <!-- /#mobile-application -->
 {% endblock %}
-
-{% block footer %}<!-- Not sure yet, so keep blank for now -->{% endblock %}

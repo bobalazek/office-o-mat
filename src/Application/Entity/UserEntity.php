@@ -650,31 +650,7 @@ class UserEntity
     }
 
     /********** Other Methods **********/
-    public function toArray($includeAllData = false)
-    {
-        $data = array();
-
-        $data['id'] = $this->getId();
-        $data['locale'] = $this->getLocale();
-        $data['username'] = $this->getUsername();
-        $data['email'] = $this->getEmail();
-        $data['token'] = $this->getToken();
-
-        if ($includeAllData) {
-            $data['token'] = $this->getToken();
-            $data['accessToken'] = $this->getAccessToken();
-            $data['salt'] = $this->getSalt();
-            $data['password'] = $this->getPassword();
-            $data['enabled'] = $this->isEnabled();
-            $data['locked'] = $this->isLocked();
-            $data['resetPasswordCode'] = $this->getResetPasswordCode();
-            $data['activationCode'] = $this->getActivationCode();
-        }
-
-        return $data;
-    }
-
-    public function toJson()
+    public function toArray()
     {
         return array(
             'id' => $this->getId(),
@@ -683,13 +659,13 @@ class UserEntity
             'first_name' => $this->getProfile()->getFirstName(),
             'last_name' => $this->getProfile()->getLastName(),
             'full_name' => $this->getProfile()->getFullName(),
-            'enabled' => $this->getEnabled(),
-            'locked' => $this->getLocked(),
+            'image_url' => $this->getProfile()->getImageUrl()
+                ? $this->getProfile()->getImageUrl()
+                : 'http://api.randomuser.me/portraits/lego/1.jpg',
+            'role' => $this->getProfile()->getRole(),
             'time_created' => $this->getTimeCreated(),
-            'access_token' => $this->getAccessToken(),
         );
     }
-
     /********** Callback Methods **********/
     /**
      * @ORM\PreUpdate
