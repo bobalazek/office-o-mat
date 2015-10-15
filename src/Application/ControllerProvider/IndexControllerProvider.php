@@ -18,6 +18,12 @@ class IndexControllerProvider
         )
         ->bind('index');
 
+        $controllers->match(
+            '/mobile',
+            'Application\Controller\IndexController::mobileAction'
+        )
+        ->bind('mobile');
+
         return $controllers;
     }
 }

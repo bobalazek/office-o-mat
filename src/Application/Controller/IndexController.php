@@ -19,4 +19,16 @@ class IndexController
             )
         );
     }
+
+    public function mobileAction(Request $request, Application $app)
+    {
+        $data = array();
+
+        return new Response(
+            $app['twig']->render(
+                'contents/mobile.html.twig',
+                $data
+            )
+        );
+    }
 }
