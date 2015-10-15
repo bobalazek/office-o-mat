@@ -24,6 +24,12 @@ class ApiControllerProvider
         )
         ->bind('api.me');
 
+        $controllers->match(
+            '/logout',
+            'Application\Controller\ApiController::logoutAction'
+        )
+        ->bind('api.logout');
+
         /***** Mobile *****/
         $controllers->match(
             '/mobile',

@@ -38,7 +38,10 @@ class ApiController
             ->findOneByAccessToken($accessToken)
         ;
 
-        if (! $user) {
+        if (
+            ! $user ||
+            ! $user->getAccessToken()
+        ) {
             return $app->json(array(
                 'error' => array(
                     'message' => 'No user with this access token found.',
@@ -57,6 +60,45 @@ class ApiController
         return $app->json(
             $user->toArray()
         );
+    }
+
+    public function logoutAction(Request $request, Application $app)
+    {
+        $accessToken = $request->query->get('access_token', false);
+
+        if (! $accessToken) {
+            return $app->json(array(
+                'error' => array(
+                    'message' => 'No access token found.',
+                ),
+            ), 404);
+        }
+
+        $user = $app['orm.em']
+            ->getRepository('Application\Entity\UserEntity')
+            ->findOneByAccessToken($accessToken)
+        ;
+
+        if (
+            ! $user ||
+            ! $user->getAccessToken()
+        ) {
+            return $app->json(array(
+                'error' => array(
+                    'message' => 'No user with this access token found.',
+                ),
+            ), 404);
+        }
+
+        $user->setAccessToken(null);
+        $user->setTimeAccessTokenExpires(null);
+
+        $app['orm.em']->persist($user);
+        $app['orm.em']->flush();
+
+        return $app->json(array(
+            'success' => true,
+        ));
     }
 
     public function mobileAction(Request $request, Application $app)
