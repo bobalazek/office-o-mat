@@ -4,6 +4,7 @@ angular
         [
             'ui.router',
             'ui.bootstrap',
+            'ui.bootstrap.datetimepicker',
             'angularMoment',
         ]
     )
@@ -17,7 +18,7 @@ angular
     })
     .controller (
         'DashboardController',
-        function DashboardController($rootScope, $scope, $state, $stateParams, $http, $cookies, toastr) {
+        function DashboardController($rootScope, $scope, $state, $stateParams, $http, $cookies, $uibModal, toastr) {
             var vm = this;
 
             vm.type = $stateParams.type;
@@ -32,6 +33,8 @@ angular
             vm.employeeWorkingTimes = [];
             vm.employeeCookie = employeeCookie;
             vm.employeeLogout = employeeLogout;
+            vm.employeeWorkingTimeSaveModalOpen = employeeWorkingTimeSaveModalOpen;
+            vm.employeeWorkingTimeRemoveModalOpen = employeeWorkingTimeRemoveModalOpen;
 
             if (vm.type == 'employee') {
                 if (employeeCookie) {
@@ -83,6 +86,8 @@ angular
                 })
             }
 
+            // To-Do: Logout after the session expires
+
             function employeeLogout() {
                 $http({
                     method: 'GET',
@@ -115,7 +120,32 @@ angular
                     $state.go('login', { type: 'employee' });
                 });
             }
+
+            function employeeWorkingTimeSaveModalOpen(selectedWorkingTime) {
+                var employeeWorkingTimesSaveModal = $uibModal.open({
+                    templateUrl: 'assets/app/mobile-application/modules/dashboard/dashboard-employee-save-modal.tmpl.html',
+                    controller: 'EmployeeWorkingTimesSaveModalController as employeeWorkingTimesSaveModalScope',
+                    resolve: {
+                        selectedWorkingTime: selectedWorkingTime,
+                    },
+                });
+            }
+
+            function employeeWorkingTimeRemoveModalOpen(selectedWorkingTime) {
+
+            }
             // Employee /END
+
+            return vm;
+        }
+    )
+    .controller (
+        'EmployeeWorkingTimesSaveModalController',
+        function EmployeeWorkingTimesSaveModalController($scope, $modalInstance, selectedWorkingTime) {
+            var vm = this;
+
+            vm.timeStarted = new Date();
+            vm.timeEnded = null;
 
             return vm;
         }

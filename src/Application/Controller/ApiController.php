@@ -27,6 +27,7 @@ class ApiController
         );
     }
 
+    /***** Working Times *****/
     public function meWorkingTimesAction(Request $request, Application $app)
     {
         $workingTimes = array();
@@ -44,6 +45,52 @@ class ApiController
 
         return $app->json(
             $workingTimes
+        );
+    }
+
+    public function meWorkingTimesNewAction(Request $request, Application $app)
+    {
+        $workingTimeData = $request->request->all();
+        $workingTime = new \Application\Entity\WorkingTimeEntity();
+
+        if (! $workingTimeData['time_started']) {
+            return $app->json(
+                array(
+                    'error' => array(
+                        'message' => 'You need at least to specify the time started!',
+                    ),
+                ),
+                403
+            );
+        }
+
+        $workingTime
+            ->setTimeStarted(
+                new \Datetime($workingTimeData['time_started'])
+            )
+            ->setTimeEnded(
+                isset($workingTimeData['time_ended'])
+                    ? new \Datetime($workingTimeData['time_ended'])
+                    : null
+            )
+            ->setNotes(
+                isset($workingTimeData['notes'])
+                    ? $workingTimeData['notes']
+                    : null
+            )
+            ->setLocation(
+                isset($workingTimeData['location'])
+                    ? $workingTimeData['location']
+                    : null
+            )
+            ->setUser($app['user'])
+        ;
+
+        $app['orm.em']->persist($workingTime);
+        $app['orm.em']->flush();
+
+        return $app->json(
+            $workingTime->toArray()
         );
     }
 

@@ -35,7 +35,8 @@
                 class="text-left">
                 <h2>
                     Working Times
-                    <button class="btn btn-sm btn-default">
+                    <button class="btn btn-sm btn-default"
+                        ng-click="dashboardScope.employeeWorkingTimeSaveModalOpen()">
                         New
                     </button>
                 </h2>
@@ -61,7 +62,16 @@
                                 <td ng-bind="workingTime.time_ended"></td>
                                 <td ng-bind="workingTime.notes"></td>
                                 <td ng-bind="workingTime.location"></td>
-                                <td>To-Do: ACTIONS</td>
+                                <td>
+                                    <button class="btn btn-sm btn-default"
+                                        ng-click="dashboardScope.employeeWorkingTimeSaveModalOpen(workingTime)">
+        								<i class="fa fa-fw fa-cog"></i>
+        							</button>
+        							<button class="btn btn-sm btn-danger"
+                                        ng-click="dashboardScope.employeeWorkingTimeRemoveModalOpen(workingTime)">
+        								<i class="fa fa-fw fa-times"></i>
+        							</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

@@ -73,11 +73,33 @@ class ApiControllerProvider
         ->bind('api.me')
         ->before($accessTokenMiddleware);
 
+        /*** Working Times ***/
         $controllers->get(
             '/me/working-times',
             'Application\Controller\ApiController::meWorkingTimesAction'
         )
         ->bind('api.me.working-time')
+        ->before($accessTokenMiddleware);
+
+        $controllers->post(
+            '/me/working-times',
+            'Application\Controller\ApiController::meWorkingTimesNewAction'
+        )
+        ->bind('api.me.working-time.new')
+        ->before($accessTokenMiddleware);
+
+        $controllers->put(
+            '/me/working-times/{id}',
+            'Application\Controller\ApiController::meWorkingTimesEditAction'
+        )
+        ->bind('api.me.working-time.edit')
+        ->before($accessTokenMiddleware);
+
+        $controllers->put(
+            '/me/working-times/{id}',
+            'Application\Controller\ApiController::meWorkingTimesRemoveAction'
+        )
+        ->bind('api.me.working-time.remove')
         ->before($accessTokenMiddleware);
 
         /***** Mobile *****/

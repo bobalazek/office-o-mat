@@ -4,7 +4,7 @@
   "version": "0.1",
   "dependencies": {
     "angular-latest": "~1.4",
-    "angular-bootstrap": "~0.13",
+    "angular-bootstrap": "~0.14",
     "angular-ui-router": "~0.2",
     "angular-cookies": "1.4",
     "angular-animate": "1.4",
@@ -27,7 +27,8 @@
     "respond": "~1.4",
     "restangular": "~1.4",
     "angular-toastr": "~1.5.0",
-    "angular-moment": "~0.10.3"
+    "angular-moment": "~0.10.3",
+    "angular-ui-bootstrap-datetimepicker": "~0.12.0"
   },
   "resolutions": {
     "d3": "~3.5",
