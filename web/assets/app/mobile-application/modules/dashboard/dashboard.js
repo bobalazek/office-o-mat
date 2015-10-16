@@ -18,7 +18,7 @@ angular
     })
     .controller (
         'DashboardController',
-        function DashboardController($rootScope, $scope, $state, $stateParams, $http, $cookies, $uibModal, toastr) {
+        function DashboardController($rootScope, $scope, $state, $stateParams, $http, $cookies, $interval, $uibModal, toastr) {
             var vm = this;
 
             vm.type = $stateParams.type;
@@ -38,22 +38,10 @@ angular
 
             if (vm.type == 'employee') {
                 if (employeeCookie) {
-                    $http({
-                        method: 'GET',
-                        url: 'api/me?access_token='+employeeCookie.access_token,
-                    }).then(function(response) {
-                        var data = response.data;
+                    loadEmployee();
 
-                        vm.employee = data;
-                    }, function(response) {
-                        var data = response.data;
-
-                        toastr.error(
-                            data.error.message
-                        );
-
-                        $state.go('login', { type: 'employee' });
-                    });
+                    // Run to see if we have any changes AND to force logout the user when session is over
+                    $interval(loadEmployee, 10000);
                 } else {
                     toastr.info(
                         'You are not logged in!'
@@ -66,14 +54,31 @@ angular
                     return vm.employee;
                 }, function(newValue, oldValue) {
                     if (newValue != null) {
-                        loadWorkingTimes();
+                        loadEmployeeWorkingTimes();
                     }
                 })
             }
 
-            // To-Do: Logout after the session expires
+            function loadEmployee() {
+                $http({
+                    method: 'GET',
+                    url: 'api/me?access_token='+employeeCookie.access_token,
+                }).then(function(response) {
+                    var data = response.data;
 
-            function loadWorkingTimes() {
+                    vm.employee = data;
+                }, function(response) {
+                    var data = response.data;
+
+                    toastr.error(
+                        data.error.message
+                    );
+
+                    $state.go('login', { type: 'employee' });
+                });
+            }
+
+            function loadEmployeeWorkingTimes() {
                 $http({
                     method: 'GET',
                     url: 'api/me/working-times?access_token='+employeeCookie.access_token,
@@ -136,7 +141,7 @@ angular
                 });
 
                 employeeWorkingTimesSaveModal.result.then(function(data) {
-                    loadWorkingTimes();
+                    loadEmployeeWorkingTimes();
                 }, function() {
                     // Dismissed
                 });
@@ -153,7 +158,7 @@ angular
                 });
 
                 employeeWorkingTimesRemoveModal.result.then(function(data) {
-                    loadWorkingTimes();
+                    loadEmployeeWorkingTimes();
                 }, function() {
                     // Dismissed
                 });
