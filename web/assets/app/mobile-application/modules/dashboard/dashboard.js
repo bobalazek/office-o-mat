@@ -31,6 +31,7 @@ angular
             var employeeCookie = $cookies.getObject('employee');
             vm.employee = null;
             vm.employeeWorkingTimes = [];
+            vm.employeeInterval = null;
             vm.employeeCookie = employeeCookie;
             vm.employeeLogout = employeeLogout;
             vm.employeeWorkingTimeSaveModalOpen = employeeWorkingTimeSaveModalOpen;
@@ -41,7 +42,10 @@ angular
                     loadEmployee();
 
                     // Run to see if we have any changes AND to force logout the user when session is over
-                    $interval(loadEmployee, 10000);
+                    vm.employeeInterval = $interval(
+                        loadEmployee,
+                        8000
+                    );
                 } else {
                     toastr.info(
                         'You are not logged in!'
@@ -73,6 +77,10 @@ angular
                     toastr.error(
                         data.error.message
                     );
+
+                    if (vm.employeeInterval != null) {
+                        $interval.cancel(vm.employeeInterval);
+                    }
 
                     $state.go('login', { type: 'employee' });
                 });
