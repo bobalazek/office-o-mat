@@ -28,17 +28,16 @@ angular
             }
 
             // Employee
-            var employeeCookie = $cookies.getObject('employee');
             vm.employee = null;
             vm.employeeWorkingTimes = [];
             vm.employeeInterval = null;
-            vm.employeeCookie = employeeCookie;
+            vm.employeeCookie = $cookies.getObject('employee');
             vm.employeeLogout = employeeLogout;
             vm.employeeWorkingTimeSaveModalOpen = employeeWorkingTimeSaveModalOpen;
             vm.employeeWorkingTimeRemoveModalOpen = employeeWorkingTimeRemoveModalOpen;
 
             if (vm.type == 'employee') {
-                if (employeeCookie) {
+                if (vm.employeeCookie) {
                     loadEmployee();
 
                     // Run to see if we have any changes AND to force logout the user when session is over
@@ -66,7 +65,7 @@ angular
             function loadEmployee() {
                 $http({
                     method: 'GET',
-                    url: 'api/me?access_token='+employeeCookie.access_token,
+                    url: 'api/me?access_token='+vm.employeeCookie.access_token,
                 }).then(function(response) {
                     var data = response.data;
 
@@ -82,6 +81,9 @@ angular
                         $interval.cancel(vm.employeeInterval);
                     }
 
+                    vm.employee = null;
+                    vm.employeeWorkingTimes = [];
+
                     $state.go('login', { type: 'employee' });
                 });
             }
@@ -89,7 +91,7 @@ angular
             function loadEmployeeWorkingTimes() {
                 $http({
                     method: 'GET',
-                    url: 'api/me/working-times?access_token='+employeeCookie.access_token,
+                    url: 'api/me/working-times?access_token='+vm.employeeCookie.access_token,
                 }).then(function(response) {
                     var data = response.data;
 
@@ -108,7 +110,7 @@ angular
             function employeeLogout() {
                 $http({
                     method: 'GET',
-                    url: 'api/mobile/logout?access_token='+employeeCookie.access_token,
+                    url: 'api/mobile/logout?access_token='+vm.employeeCookie.access_token,
                 }).then(function(response) {
                     var data = response.data;
 
@@ -144,7 +146,7 @@ angular
                     controller: 'EmployeeWorkingTimesSaveModalController as employeeWorkingTimesSaveModalScope',
                     resolve: {
                         selectedWorkingTime: selectedWorkingTime,
-                        employeeCookie: employeeCookie,
+                        employeeCookie: vm.employeeCookie,
                     },
                 });
 
@@ -161,7 +163,7 @@ angular
                     controller: 'EmployeeWorkingTimesRemoveModalController as employeeWorkingTimesRemoveModalScope',
                     resolve: {
                         selectedWorkingTime: selectedWorkingTime,
-                        employeeCookie: employeeCookie,
+                        employeeCookie: vm.employeeCookie,
                     },
                 });
 
