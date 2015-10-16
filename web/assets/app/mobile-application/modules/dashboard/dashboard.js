@@ -31,6 +31,7 @@ angular
             // Employee
             vm.employee = null;
             vm.employeeWorkingTimes = [];
+            vm.employeeStatistics = [];
             vm.employeeInterval = null;
             vm.employeeSelectedWorkingTime = null;
             vm.employeeCookie = $cookies.getObject('employee');
@@ -94,6 +95,27 @@ angular
                     var data = response.data;
 
                     vm.employeeWorkingTimes = data;
+
+                    loadEmployeeStatistics()
+                }, function(response) {
+                    var data = response.data;
+
+                    toastr.error(
+                        data.error.message
+                    );
+
+                    $state.go('login', { type: 'employee' });
+                });
+            }
+
+            function loadEmployeeStatistics() {
+                $http({
+                    method: 'GET',
+                    url: 'api/me/statistics?access_token='+vm.employeeCookie.access_token,
+                }).then(function(response) {
+                    var data = response.data;
+
+                    vm.employeeStatistics = data;
                 }, function(response) {
                     var data = response.data;
 

@@ -73,6 +73,13 @@ class ApiControllerProvider
         ->bind('api.me')
         ->before($accessTokenMiddleware);
 
+        $controllers->get(
+            '/me/statistics',
+            'Application\Controller\ApiController::meStatisticsAction'
+        )
+        ->bind('api.me.statistics')
+        ->before($accessTokenMiddleware);
+
         /*** Working Times ***/
         $controllers->get(
             '/me/working-times',

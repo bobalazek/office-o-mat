@@ -27,6 +27,114 @@ class ApiController
         );
     }
 
+    public function meStatisticsAction(Request $request, Application $app)
+    {
+        $now = new \Datetime('now');
+        $today = new \Datetime('today');
+        $yesterday = new \Datetime('yesterday');
+        $thisWeek = new \Datetime('last monday');
+        $thisMonth = new \Datetime(date('Y-m-01 00:00:00'));
+        $thisYear = new \Datetime(date('Y-01-01 00:00:00'));
+
+        // Today
+        $hoursWorkedToday = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted > :timeFrom")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $today->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedToday = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
+        // Yesterday
+        $hoursWorkedYesterday = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted > :timeFrom
+                    AND wt.timeStarted < :timeTo")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $yesterday->format(DATE_ATOM))
+            ->setParameter(':timeTo', $today->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedYesterday = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
+        // This Week
+        $hoursWorkedThisWeek = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted > :timeFrom
+                    AND wt.timeStarted < :timeTo")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $thisWeek->format(DATE_ATOM))
+            ->setParameter(':timeTo', $now->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedThisWeek = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
+        // This Month
+        $hoursWorkedThisMonth = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted > :timeFrom
+                    AND wt.timeStarted < :timeTo")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $thisMonth->format(DATE_ATOM))
+            ->setParameter(':timeTo', $now->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedThisMonth = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
+        // This Year
+        $hoursWorkedThisYear = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted > :timeFrom
+                    AND wt.timeStarted < :timeTo")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $thisYear->format(DATE_ATOM))
+            ->setParameter(':timeTo', $now->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedThisYear = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
+        return $app->json(array(
+            'hours_worked' => array(
+                'today' => $hoursWorkedToday,
+                'yesterday' => $hoursWorkedYesterday,
+                'this_week' => $hoursWorkedThisWeek,
+                'this_month' => $hoursWorkedThisMonth,
+                'this_year' => $hoursWorkedThisYear,
+            ),
+        ));
+    }
+
     /***** Working Times *****/
     public function meWorkingTimesAction(Request $request, Application $app)
     {

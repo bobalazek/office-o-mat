@@ -83,8 +83,50 @@
                             </tr>
                         </tbody>
                     </table>
+                </div> <!-- /.table-responsive -->
+            </div> <!-- /#dashboard-employee-working-times-wrapper -->
+            <div id="dashboard-employee-statistics-wrapper"
+                class="text-left">
+                <h2>Statistics</h2>
+                <h3>Hours Worked</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Today</th>
+                                <th>Yesterday</th>
+                                <th>This Week</th>
+                                <th>This Month</th>
+                                <th>This Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.today"></span>
+                                    hours
+                                </td>
+                                <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.yesterday"></span>
+                                    hours
+                                </td>
+                                <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_week"></span>
+                                    hours
+                                </td>
+                                <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_month"></span>
+                                    hours
+                                </td>
+                                <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_year"></span>
+                                    hours
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </div> <!-- /#dashboard-employee-statistics-wrapper -->
         </div>
     </div>
 </div>
