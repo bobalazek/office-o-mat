@@ -12,10 +12,22 @@
                     <label>
                         Time Started
                     </label>
-                    <br />
-                    <datetimepicker ng-model="employeeWorkingTimesSaveModalScope.form.timeStarted"
-                        show-meridian="false"
-                        date-format="yyyy-MM-dd"></datetimepicker>
+                    <div class="input-group">
+                        <input class="form-control"
+                            type="text"
+                            readonly="readonly"
+                            datetime-picker="yyyy-MM-dd HH:mm"
+                            timepicker-options="{ showMeridian: false }"
+                            is-open="employeeWorkingTimesSaveModalScope.timeStartedCalendarIsOpen"
+                            ng-model="employeeWorkingTimesSaveModalScope.form.timeStarted" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default"
+                                type="button"
+                                ng-click="employeeWorkingTimesSaveModalScope.timeStartedCalendarOpenCalendar($event, prop)">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-6">
@@ -23,10 +35,22 @@
                     <label>
                         Time Ended
                     </label>
-                    <br />
-                    <datetimepicker ng-model="employeeWorkingTimesSaveModalScope.form.timeEnded"
-                        show-meridian="false"
-                        date-format="yyyy-MM-dd"></datetimepicker>
+                    <div class="input-group">
+                        <input class="form-control"
+                            type="text"
+                            readonly="readonly"
+                            datetime-picker="yyyy-MM-dd HH:mm"
+                            timepicker-options="{ showMeridian: false }"
+                            is-open="employeeWorkingTimesSaveModalScope.timeEndedCalendarIsOpen"
+                            ng-model="employeeWorkingTimesSaveModalScope.form.timeEnded" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default"
+                                type="button"
+                                ng-click="employeeWorkingTimesSaveModalScope.timeEndedCalendarOpenCalendar($event, prop)">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

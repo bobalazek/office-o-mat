@@ -168,6 +168,11 @@ angular
         function EmployeeWorkingTimesSaveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeCookie) {
             var vm = this;
 
+            vm.timeStartedCalendarIsOpen = false;
+            vm.timeStartedCalendarOpenCalendar = timeStartedCalendarOpenCalendar;
+            vm.timeEndedCalendarIsOpen = false;
+            vm.timeEndedCalendarOpenCalendar = timeEndedCalendarOpenCalendar;
+
             if (typeof selectedWorkingTime !== 'undefined') {
                 vm.action = 'edit';
                 vm.modalTitle = 'Edit Working Time';
@@ -198,6 +203,20 @@ angular
             vm.cancel = cancel;
 
             /*** Functions ***/
+            function timeStartedCalendarOpenCalendar(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                vm.timeStartedCalendarIsOpen = true;
+            }
+
+            function timeEndedCalendarOpenCalendar(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                vm.timeEndedCalendarIsOpen = true;
+            }
+
             function save() {
                 if (vm.action == 'new') {
                     var method = 'POST';

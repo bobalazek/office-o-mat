@@ -58,8 +58,13 @@
                                 </td>
                             </tr>
                             <tr ng-repeat="workingTime in dashboardScope.employeeWorkingTimes">
-                                <td ng-bind="workingTime.time_started"></td>
-                                <td ng-bind="workingTime.time_ended"></td>
+                                <td>
+                                    <time ng-bind="workingTime.time_started | date : 'yyyy-MM-dd HH:mm:ss'"></time>
+                                </td>
+                                <td>
+                                    <time ng-bind="workingTime.time_ended | date : 'yyyy-MM-dd HH:mm:ss'"
+                                        ng-if="workingTime.time_ended"></time>
+                                </td>
                                 <td ng-bind="workingTime.notes"></td>
                                 <td ng-bind="workingTime.location"></td>
                                 <td>
