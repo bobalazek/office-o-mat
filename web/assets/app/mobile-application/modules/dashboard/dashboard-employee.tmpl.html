@@ -88,6 +88,7 @@
                             <tr>
                                 <th>Time Started</th>
                                 <th>Time Ended</th>
+                                <th>Duration</th>
                                 <th>Notes</th>
                                 <th>Location</th>
                                 <th width="100">
@@ -109,6 +110,12 @@
                                 <td>
                                     <time ng-bind="workingTime.time_ended | date : 'yyyy-MM-dd HH:mm:ss'"
                                         ng-if="workingTime.time_ended"></time>
+                                </td>
+                                <td>
+                                    <div ng-if="workingTime.time_ended">
+                                        <span ng-bind="{{ (workingTime.time_ended | amDifference : workingTime.time_started : 'minutes') / 60 | number : 2 }}"></span>
+                                        hours
+                                    </div>
                                 </td>
                                 <td ng-bind="workingTime.notes"></td>
                                 <td ng-bind="workingTime.location"></td>
