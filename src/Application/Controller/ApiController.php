@@ -22,83 +22,29 @@ class ApiController
 
     public function meAction(Request $request, Application $app)
     {
-        $currentDatetime = new \Datetime('now');
-        $accessToken = $request->query->get('access_token', false);
-
-        if (! $accessToken) {
-            return $app->json(array(
-                'error' => array(
-                    'message' => 'No access token found.',
-                ),
-            ), 404);
-        }
-
-        $user = $app['orm.em']
-            ->getRepository('Application\Entity\UserEntity')
-            ->findOneByAccessToken($accessToken)
-        ;
-
-        if (
-            ! $user ||
-            ! $user->getAccessToken()
-        ) {
-            return $app->json(array(
-                'error' => array(
-                    'message' => 'No user with this access token found.',
-                ),
-            ), 404);
-        }
-
-        if ($currentDatetime > $user->getTimeAccessTokenExpires()) {
-            return $app->json(array(
-                'error' => array(
-                    'message' => 'This access token has expired.',
-                ),
-            ), 404);
-        }
-
         return $app->json(
-            $user->toArray()
+            $app['user']->toArray()
         );
     }
 
-    public function logoutAction(Request $request, Application $app)
+    public function meWorkingTimesAction(Request $request, Application $app)
     {
-        $accessToken = $request->query->get('access_token', false);
+        $workingTimes = array();
 
-        if (! $accessToken) {
-            return $app->json(array(
-                'error' => array(
-                    'message' => 'No access token found.',
-                ),
-            ), 404);
-        }
-
-        $user = $app['orm.em']
-            ->getRepository('Application\Entity\UserEntity')
-            ->findOneByAccessToken($accessToken)
+        $workingTimesObjects = $app['orm.em']
+            ->getRepository('Application\Entity\WorkingTimeEntity')
+            ->findByUser($app['user'])
         ;
 
-        if (
-            ! $user ||
-            ! $user->getAccessToken()
-        ) {
-            return $app->json(array(
-                'error' => array(
-                    'message' => 'No user with this access token found.',
-                ),
-            ), 404);
+        if ($workingTimesObjects) {
+            foreach ($workingTimesObjects as $workingTimesObject) {
+                $workingTimes[] = $workingTimesObject->toArray();
+            }
         }
 
-        $user->setAccessToken(null);
-        $user->setTimeAccessTokenExpires(null);
-
-        $app['orm.em']->persist($user);
-        $app['orm.em']->flush();
-
-        return $app->json(array(
-            'success' => true,
-        ));
+        return $app->json(
+            $workingTimes
+        );
     }
 
     public function mobileAction(Request $request, Application $app)
@@ -159,8 +105,11 @@ class ApiController
         }
 
         $user
+            ->setAccessToken(
+                md5(uniqid(null, true))
+            )
             ->setTimeAccessTokenExpires(
-                new \Datetime('+ 10 minutes')
+                new \Datetime('+ 5 minutes')
             )
         ;
 
@@ -171,6 +120,19 @@ class ApiController
             'id' => $user->getId(),
             'access_token' => $user->getAccessToken(),
             'time_access_token_expires' => $user->getTimeAccessTokenExpires()->format(DATE_ATOM),
+        ));
+    }
+
+    public function mobileLogoutAction(Request $request, Application $app)
+    {
+        $app['user']->setAccessToken(null);
+        $app['user']->setTimeAccessTokenExpires(null);
+
+        $app['orm.em']->persist($app['user']);
+        $app['orm.em']->flush();
+
+        return $app->json(array(
+            'success' => true,
         ));
     }
 }

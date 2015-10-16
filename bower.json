@@ -23,10 +23,11 @@
     "jquery-migrate": "~1.2",
     "jquery-prettyPhoto": "*",
     "modernizr": "~2.8",
-    "moment": "~2.9",
+    "moment": "~2.10",
     "respond": "~1.4",
     "restangular": "~1.4",
-    "angular-toastr": "~1.5.0"
+    "angular-toastr": "~1.5.0",
+    "angular-moment": "~0.10.3"
   },
   "resolutions": {
     "d3": "~3.5",

@@ -1,11 +1,72 @@
-<div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-        <div id="dashboard-employee">
-            <h2>
-                Hello
-                <strong ng-bind="dashboardScope.employee.full_name">John Doe</strong>. <br />
-                How are you today?
-            </h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="dashboard-employee-info"
+                style="position: fixed; top: 5px; left: 5px; right: 5px; z-index: 9;">
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <button class="btn btn-danger"
+                            ng-click="dashboardScope.employeeLogout()">
+                            Logout
+                        </button>
+                    </div>
+                    <div class="pull-right"
+                        style="background: #fff; opacity: 0.8; padding: 5px;">
+                        This session will expire in: <br />
+                        <b am-time-ago="dashboardScope.employeeCookie.time_access_token_expires"></b>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboard-employee">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+                        <img class="img-responsive"
+                            ng-src="{{ dashboardScope.employee.image_url }}"
+                            style="margin: 0 auto;" />
+                    </div>
+                </div>
+                <h2>
+                    Hello
+                    <strong ng-bind="dashboardScope.employee.full_name">John Doe</strong>. <br />
+                    How are you today?
+                </h2>
+            </div>
+            <div id="dashboard-employee-working-times-wrapper"
+                class="text-left">
+                <h2>
+                    Working Times
+                    <button class="btn btn-sm btn-default">
+                        New
+                    </button>
+                </h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time Started</th>
+                                <th>Time Ended</th>
+                                <th>Notes</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="dashboardScope.employeeWorkingTimes.length == 0">
+                                <td colspan="5">
+                                    You do not have any working times yet!
+                                </td>
+                            </tr>
+                            <tr ng-repeat="workingTime in dashboardScope.employeeWorkingTimes">
+                                <td ng-bind="workingTime.time_started"></td>
+                                <td ng-bind="workingTime.time_ended"></td>
+                                <td ng-bind="workingTime.notes"></td>
+                                <td ng-bind="workingTime.location"></td>
+                                <td>To-Do: ACTIONS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

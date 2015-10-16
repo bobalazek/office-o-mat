@@ -196,7 +196,13 @@ class WorkingTimeEntity
     {
         return array(
             'id' => $this->getId(),
-            'time_created' => $this->getTimeCreated(),
+            'time_started' => $this->getTimeStarted()->format(DATE_ATOM),
+            'time_ended' => $this->getTimeEnded()
+                ? $this->getTimeEnded()->format(DATE_ATOM)
+                : null,
+            'notes' => $this->getNotes(),
+            'location' => $this->getLocation(),
+            'time_created' => $this->getTimeCreated()->format(DATE_ATOM),
         );
     }
 

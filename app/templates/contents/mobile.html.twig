@@ -14,9 +14,15 @@
 
 {% block head_javascripts %}
     {{ parent() }}
+    <script id="moment-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/moment/min/moment-with-locales.min.js"></script>
     <script id="angular-js"
         type="text/javascript"
         src="{{ app.baseUrl }}/assets/vendor/angular/angular.min.js"></script>
+    <script id="angular-moment-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-moment/angular-moment.min.js"></script>
     <script id="angular-animate-js"
         type="text/javascript"
         src="{{ app.baseUrl }}/assets/vendor/angular-animate/angular-animate.min.js"></script>

@@ -707,7 +707,7 @@ class UserEntity
                 ? $this->getProfile()->getImageUrl()
                 : 'http://api.randomuser.me/portraits/lego/1.jpg',
             'role' => $this->getProfile()->getRole(),
-            'time_created' => $this->getTimeCreated(),
+            'time_created' => $this->getTimeCreated()->format(DATE_ATOM),
         );
     }
     /********** Callback Methods **********/

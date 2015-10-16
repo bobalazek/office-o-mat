@@ -7,7 +7,8 @@
                 ng-if="loginScope.employeesListShown">
                 <div class="col-sm-6"
                     ng-repeat="employee in loginScope.employees">
-                    <div class="login-employee">
+                    <div class="login-employee"
+                        style="margin-bottom: 20px;">
                         <img class="img-responsive"
                             ng-src="{{ employee.image_url }}" />
                         <h4 ng-bind="employee.full_name">John Doe</h4>

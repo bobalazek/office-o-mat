@@ -4,6 +4,7 @@ angular
         [
             'ui.router',
             'ui.bootstrap',
+            'angularMoment',
         ]
     )
     .config( function($stateProvider) {
@@ -28,8 +29,9 @@ angular
             // Employee
             var employeeCookie = $cookies.getObject('employee');
             vm.employee = null;
-
-            console.log(employeeCookie);
+            vm.employeeWorkingTimes = [];
+            vm.employeeCookie = employeeCookie;
+            vm.employeeLogout = employeeLogout;
 
             if (vm.type == 'employee') {
                 if (employeeCookie) {
@@ -40,19 +42,78 @@ angular
                         var data = response.data;
 
                         vm.employee = data;
-
-                        console.log(vm.employee);
                     }, function(response) {
-                        console.log('Error');
-                        console.log(response);
+                        var data = response.data;
+
+                        toastr.error(
+                            data.error.message
+                        );
+
+                        $state.go('login', { type: 'employee' });
                     });
                 } else {
                     toastr.info(
-                        'No employee cookie found!'
+                        'You are not logged in!'
                     );
 
-                    $state.go('home');
+                    $state.go('login', { type: 'employee' });
                 }
+
+                $scope.$watch(function() {
+                    return vm.employee;
+                }, function(newValue, oldValue) {
+                    if (newValue != null) {
+                        $http({
+                            method: 'GET',
+                            url: 'api/me/working-times?access_token='+employeeCookie.access_token,
+                        }).then(function(response) {
+                            var data = response.data;
+
+                            vm.employeeWorkingTimes = data;
+                        }, function(response) {
+                            var data = response.data;
+
+                            toastr.error(
+                                data.error.message
+                            );
+
+                            $state.go('login', { type: 'employee' });
+                        });
+                    }
+                })
+            }
+
+            function employeeLogout() {
+                $http({
+                    method: 'GET',
+                    url: 'api/mobile/logout?access_token='+employeeCookie.access_token,
+                }).then(function(response) {
+                    var data = response.data;
+
+                    toastr.success(
+                        'You have successfully logged out!'
+                    );
+
+                    var expiresDate = new Date();
+
+                    $cookies.putObject(
+                        'employee',
+                        null,
+                        {
+                            expires: expiresDate,
+                        }
+                    );
+
+                    $state.go('login', { type: 'employee' });
+                }, function(response) {
+                    var data = response.data;
+
+                    toastr.error(
+                        data.error.message
+                    );
+
+                    $state.go('login', { type: 'employee' });
+                });
             }
             // Employee /END
 
