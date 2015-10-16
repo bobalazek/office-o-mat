@@ -118,8 +118,11 @@ angular
                         'You have successfully logged out!'
                     );
 
-                    var expiresDate = new Date();
+                    if (vm.employeeInterval != null) {
+                        $interval.cancel(vm.employeeInterval);
+                    }
 
+                    var expiresDate = new Date();
                     $cookies.putObject(
                         'employee',
                         null,
