@@ -6,6 +6,7 @@ angular
             'ui.bootstrap',
             'ui.bootstrap.datetimepicker',
             'angularMoment',
+            'ngAnimate',
         ]
     )
     .config( function($stateProvider) {
@@ -31,6 +32,7 @@ angular
             vm.employee = null;
             vm.employeeWorkingTimes = [];
             vm.employeeInterval = null;
+            vm.employeeSelectedWorkingTime = null;
             vm.employeeCookie = $cookies.getObject('employee');
             vm.employeeLogout = employeeLogout;
             vm.employeeWorkingTimeSaveModalOpen = employeeWorkingTimeSaveModalOpen;
@@ -52,14 +54,6 @@ angular
 
                     $state.go('login', { type: 'employee' });
                 }
-
-                $scope.$watch(function() {
-                    return vm.employee;
-                }, function(newValue, oldValue) {
-                    if (newValue != null) {
-                        loadEmployeeWorkingTimes();
-                    }
-                })
             }
 
             function loadEmployee() {
@@ -69,7 +63,11 @@ angular
                 }).then(function(response) {
                     var data = response.data;
 
-                    vm.employee = data;
+                    if (vm.employee != data) {
+                        vm.employee = data;
+
+                        loadEmployeeWorkingTimes();
+                    }
                 }, function(response) {
                     var data = response.data;
 
@@ -145,6 +143,7 @@ angular
             }
 
             function employeeWorkingTimeSaveModalOpen(selectedWorkingTime) {
+                vm.employeeSelectedWorkingTime = selectedWorkingTime;
                 var employeeWorkingTimesSaveModal = $uibModal.open({
                     templateUrl: 'assets/app/mobile-application/modules/dashboard/dashboard-employee-save-modal.tmpl.html',
                     controller: 'EmployeeWorkingTimesSaveModalController as employeeWorkingTimesSaveModalScope',
@@ -158,10 +157,13 @@ angular
                     loadEmployeeWorkingTimes();
                 }, function() {
                     // Dismissed
+                }).finally(function() {
+                    vm.employeeSelectedWorkingTime = null;;
                 });
             }
 
             function employeeWorkingTimeRemoveModalOpen(selectedWorkingTime) {
+                vm.employeeSelectedWorkingTime = selectedWorkingTime;
                 var employeeWorkingTimesRemoveModal = $uibModal.open({
                     templateUrl: 'assets/app/mobile-application/modules/dashboard/dashboard-employee-remove-modal.tmpl.html',
                     controller: 'EmployeeWorkingTimesRemoveModalController as employeeWorkingTimesRemoveModalScope',
@@ -175,6 +177,8 @@ angular
                     loadEmployeeWorkingTimes();
                 }, function() {
                     // Dismissed
+                }).finally(function() {
+                    vm.employeeSelectedWorkingTime = null;;
                 });
             }
             // Employee /END

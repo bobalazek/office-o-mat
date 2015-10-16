@@ -48,7 +48,9 @@
                                 <th>Time Ended</th>
                                 <th>Notes</th>
                                 <th>Location</th>
-                                <th>Actions</th>
+                                <th width="100">
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,7 +59,8 @@
                                     You do not have any working times yet!
                                 </td>
                             </tr>
-                            <tr ng-repeat="workingTime in dashboardScope.employeeWorkingTimes">
+                            <tr ng-class="{ info: workingTime == dashboardScope.employeeSelectedWorkingTime }"
+                                ng-repeat="workingTime in dashboardScope.employeeWorkingTimes">
                                 <td>
                                     <time ng-bind="workingTime.time_started | date : 'yyyy-MM-dd HH:mm:ss'"></time>
                                 </td>
