@@ -2,78 +2,78 @@ Application\Entity\PostEntity:
     properties:
         title:
             - NotBlank:
-                message: errors.post.title.notBlank
+                message: 'The title field can not be blank!'
                 groups: [ newAndEdit ]
 
 Application\Entity\ProfileEntity:
     properties:
         firstName:
             - NotBlank:
-                message: errors.profile.name.notBlank
+                message: 'The first name field can not be blank!'
                 groups: [ newAndEdit ]
 
 Application\Entity\RoleEntity:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: role
-            message: errors.role.role.alreadyInUse
+            message: 'This role is already in use!'
             groups: [ newAndEdit ]
     properties:
         name:
             - NotBlank:
-                message: errors.role.name.notBlank
+                message: 'The name field can not be blank!'
                 groups: [ newAndEdit ]
         role:
             - NotBlank:
-                message: errors.role.role.notBlank
+                message: 'The role field can not be blank!'
                 groups: [ newAndEdit ]
 
 Application\Entity\UserEntity:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: email
-            message: errors.user.email.alreadyInUse
+            message: 'This email is already in use!'
             groups: [ new, edit, settings ]
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: username
-            message: errors.user.username.alreadyInUse
+            message: 'This username is already in use!'
             groups: [ new, edit, settings ]
     properties:
         username:
             - NotBlank:
-                message: errors.user.username.notBlank
+                message: 'The username field can not be blank!'
                 groups: [ new, edit, settings ]
         email:
             - NotBlank:
-                message: errors.user.email.notBlank
+                message: 'The email field can not be blank!'
                 groups: [ new, edit, settings, resetPasswordRequest ]
             - Email:
-                message: errors.user.email.invalid
+                message: 'This email field address is invalid!'
                 groups: [ new, edit, settings, resetPasswordRequest ]
         plainPassword:
             - NotBlank:
-                message: errors.user.password.notBlank
+                message: 'The password field can not be blank!'
                 groups: [ new, settingsPassword, resetPasswordReset ]
         profile:
             - Valid: ~
         pinNumber:
             - LessThanOrEqual:
                 value: 9999
-                message: errors.user.pinNumber.lessThanOrEqual
+                message: 'The pin number must be less or equal to 9999!'
                 groups: [ new, edit, settings ]
             - GreaterThanOrEqual:
                 value: 1000
-                message: errors.user.pinNumber.greaterThanOrEqual
+                message: 'The pin number must be greater or equal to 1000!'
                 groups: [ new, edit, settings ]
 
 Application\Entity\WorkingTimeEntity:
     getters:
         timeEndedAfterTimeStarted:
             - 'True':
-                message: errors.workingTime.timeEnded.mustBeAfterTheTimeStarted
+                message: 'Time ended can not be later then the time started!'
                 groups: [ newAndEdit ]
     properties:
         timeStarted:
             - NotBlank:
-                message: errors.workingTime.timeStarted.notBlank
+                message: 'The time started field can not be blank!'
                 groups: [ newAndEdit ]

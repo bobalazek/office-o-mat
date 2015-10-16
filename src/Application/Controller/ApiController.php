@@ -34,7 +34,11 @@ class ApiController
 
         $workingTimesObjects = $app['orm.em']
             ->getRepository('Application\Entity\WorkingTimeEntity')
-            ->findByUser($app['user'])
+            ->findBy(array(
+                'user' => $app['user'],
+            ), array(
+                'timeCreated' => 'DESC',
+            ))
         ;
 
         if ($workingTimesObjects) {
@@ -53,24 +57,15 @@ class ApiController
         $workingTimeData = $request->request->all();
         $workingTime = new \Application\Entity\WorkingTimeEntity();
 
-        if (! $workingTimeData['time_started']) {
-            return $app->json(
-                array(
-                    'error' => array(
-                        'message' => 'You need at least to specify the time started!',
-                    ),
-                ),
-                403
-            );
-        }
-
         $workingTime
             ->setTimeStarted(
-                new \Datetime($workingTimeData['time_started'])
+                isset($workingTimeData['timeStarted']) && $workingTimeData['timeStarted']
+                    ? new \Datetime($workingTimeData['timeStarted'])
+                    : null
             )
             ->setTimeEnded(
-                isset($workingTimeData['time_ended'])
-                    ? new \Datetime($workingTimeData['time_ended'])
+                isset($workingTimeData['timeEnded']) && $workingTimeData['timeEnded']
+                    ? new \Datetime($workingTimeData['timeEnded'])
                     : null
             )
             ->setNotes(
@@ -86,12 +81,132 @@ class ApiController
             ->setUser($app['user'])
         ;
 
+        $validationErrors = $app['validator']->validate($workingTime, 'newAndEdit');
+
+        if (count($validationErrors) > 0) {
+            $errors = array();
+
+            foreach ($validationErrors as $validationError) {
+                $errors[] = array(
+                    'message' => $validationError->getMessage(),
+                );
+            }
+
+            return $app->json(array(
+                'errors' => $errors,
+            ), 403);
+        }
+
         $app['orm.em']->persist($workingTime);
         $app['orm.em']->flush();
 
         return $app->json(
             $workingTime->toArray()
         );
+    }
+
+    public function meWorkingTimesEditAction($id, Request $request, Application $app)
+    {
+        $workingTimeData = $request->request->all();
+        $workingTime = $app['orm.em']->find('Application\Entity\WorkingTimeEntity', $id);
+
+        if (! $workingTime) {
+            return $app->json(array(
+                'errors' => array(
+                    array(
+                        'message' => 'This working time does not exists!',
+                    ),
+                ),
+            ), 404);
+        }
+
+        if ($workingTime->getUser() != $app['user']) {
+            return $app->json(array(
+                'errors' => array(
+                    array(
+                        'message' => 'You have no permissions to edit this working time!',
+                    ),
+                ),
+            ), 403);
+        }
+
+        $workingTime
+            ->setTimeStarted(
+                isset($workingTimeData['timeStarted']) && $workingTimeData['timeStarted']
+                    ? new \Datetime($workingTimeData['timeStarted'])
+                    : null
+            )
+            ->setTimeEnded(
+                isset($workingTimeData['timeEnded']) && $workingTimeData['timeEnded']
+                    ? new \Datetime($workingTimeData['timeEnded'])
+                    : null
+            )
+            ->setNotes(
+                isset($workingTimeData['notes'])
+                    ? $workingTimeData['notes']
+                    : null
+            )
+            ->setLocation(
+                isset($workingTimeData['location'])
+                    ? $workingTimeData['location']
+                    : null
+            )
+        ;
+
+        $validationErrors = $app['validator']->validate($workingTime, 'newAndEdit');
+
+        if (count($validationErrors) > 0) {
+            $errors = array();
+
+            foreach ($validationErrors as $validationError) {
+                $errors[] = array(
+                    'message' => $validationError->getMessage(),
+                );
+            }
+
+            return $app->json(array(
+                'errors' => $errors,
+            ), 403);
+        }
+
+        $app['orm.em']->persist($workingTime);
+        $app['orm.em']->flush();
+
+        return $app->json(
+            $workingTime->toArray()
+        );
+    }
+
+    public function meWorkingTimesRemoveAction($id, Request $request, Application $app)
+    {
+        $workingTime = $app['orm.em']->find('Application\Entity\WorkingTimeEntity', $id);
+
+        if (! $workingTime) {
+            return $app->json(array(
+                'errors' => array(
+                    array(
+                        'message' => 'This working time does not exists!',
+                    ),
+                ),
+            ), 404);
+        }
+
+        if ($workingTime->getUser() != $app['user']) {
+            return $app->json(array(
+                'errors' => array(
+                    array(
+                        'message' => 'You have no permissions to remove this working time!',
+                    ),
+                ),
+            ), 403);
+        }
+
+        $app['orm.em']->remove($workingTime);
+        $app['orm.em']->flush();
+
+        return $app->json(array(
+            'success' => true,
+        ));
     }
 
     public function mobileAction(Request $request, Application $app)

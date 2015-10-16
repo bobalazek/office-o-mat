@@ -66,27 +66,31 @@ angular
                     return vm.employee;
                 }, function(newValue, oldValue) {
                     if (newValue != null) {
-                        $http({
-                            method: 'GET',
-                            url: 'api/me/working-times?access_token='+employeeCookie.access_token,
-                        }).then(function(response) {
-                            var data = response.data;
-
-                            vm.employeeWorkingTimes = data;
-                        }, function(response) {
-                            var data = response.data;
-
-                            toastr.error(
-                                data.error.message
-                            );
-
-                            $state.go('login', { type: 'employee' });
-                        });
+                        loadWorkingTimes();
                     }
                 })
             }
 
             // To-Do: Logout after the session expires
+
+            function loadWorkingTimes() {
+                $http({
+                    method: 'GET',
+                    url: 'api/me/working-times?access_token='+employeeCookie.access_token,
+                }).then(function(response) {
+                    var data = response.data;
+
+                    vm.employeeWorkingTimes = data;
+                }, function(response) {
+                    var data = response.data;
+
+                    toastr.error(
+                        data.error.message
+                    );
+
+                    $state.go('login', { type: 'employee' });
+                });
+            }
 
             function employeeLogout() {
                 $http({
@@ -127,12 +131,32 @@ angular
                     controller: 'EmployeeWorkingTimesSaveModalController as employeeWorkingTimesSaveModalScope',
                     resolve: {
                         selectedWorkingTime: selectedWorkingTime,
+                        employeeCookie: employeeCookie,
                     },
+                });
+
+                employeeWorkingTimesSaveModal.result.then(function(data) {
+                    loadWorkingTimes();
+                }, function() {
+                    // Dismissed
                 });
             }
 
             function employeeWorkingTimeRemoveModalOpen(selectedWorkingTime) {
+                var employeeWorkingTimesRemoveModal = $uibModal.open({
+                    templateUrl: 'assets/app/mobile-application/modules/dashboard/dashboard-employee-remove-modal.tmpl.html',
+                    controller: 'EmployeeWorkingTimesRemoveModalController as employeeWorkingTimesRemoveModalScope',
+                    resolve: {
+                        selectedWorkingTime: selectedWorkingTime,
+                        employeeCookie: employeeCookie,
+                    },
+                });
 
+                employeeWorkingTimesRemoveModal.result.then(function(data) {
+                    loadWorkingTimes();
+                }, function() {
+                    // Dismissed
+                });
             }
             // Employee /END
 
@@ -141,11 +165,137 @@ angular
     )
     .controller (
         'EmployeeWorkingTimesSaveModalController',
-        function EmployeeWorkingTimesSaveModalController($scope, $modalInstance, selectedWorkingTime) {
+        function EmployeeWorkingTimesSaveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeCookie) {
             var vm = this;
 
-            vm.timeStarted = new Date();
-            vm.timeEnded = null;
+            if (typeof selectedWorkingTime !== 'undefined') {
+                vm.action = 'edit';
+                vm.modalTitle = 'Edit Working Time';
+
+                vm.form = {
+                    id: selectedWorkingTime.id,
+                    timeStarted: new Date(selectedWorkingTime.time_started),
+                    timeEnded: selectedWorkingTime.time_ended != null
+                        ? new Date(selectedWorkingTime.time_ended)
+                        : null,
+                    notes: selectedWorkingTime.notes,
+                    location: selectedWorkingTime.location,
+                };
+            } else {
+                vm.action = 'new';
+                vm.modalTitle = 'New Working Time';
+
+                vm.form = {
+                    id: null,
+                    timeStarted: new Date(),
+                    timeEnded: null,
+                    notes: null,
+                    location: null,
+                };
+            }
+
+            vm.save = save;
+            vm.cancel = cancel;
+
+            /*** Functions ***/
+            function save() {
+                if (vm.action == 'new') {
+                    var method = 'POST';
+                    var url = 'api/me/working-times?access_token='+employeeCookie.access_token;
+                    var successText = 'The working time has been successfully added!';
+                } else {
+                    var method = 'PUT';
+                    var url = 'api/me/working-times/'+vm.form.id+'?access_token='+employeeCookie.access_token;
+                    var successText = 'The working time has been successfully edited!';
+                }
+
+                $http({
+                    method: method,
+                    url: url,
+                    data: jQuery.param(vm.form),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then(function(response) {
+                    var data = response.data;
+
+                    toastr.success(successText);
+
+                    $modalInstance.close();
+                }, function(response) {
+                    var data = response.data;
+
+                    if (typeof data.error !== 'undefined') {
+                        toastr.error(
+                            data.error.message
+                        );
+
+                        $modalInstance.dismiss('cancel');
+
+                        $state.go('login', { type: 'employee' });
+                    } else if(typeof data.errors !== 'undefined') {
+                        // When plural, then it spits out the validation errors.
+                        toastr.error(
+                            data.errors[0].message
+                        );
+                    }
+                });
+            }
+
+            function cancel() {
+                $modalInstance.dismiss('cancel');
+            }
+
+            return vm;
+        }
+    )
+    .controller (
+        'EmployeeWorkingTimesRemoveModalController',
+        function EmployeeWorkingTimesRemoveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeCookie) {
+            var vm = this;
+
+            vm.confirm = confirm;
+            vm.cancel = cancel;
+
+            /*** Functions ***/
+            function confirm() {
+                $http({
+                    method: 'DELETE',
+                    url: 'api/me/working-times/'+selectedWorkingTime.id+'?access_token='+employeeCookie.access_token,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then(function(response) {
+                    var data = response.data;
+
+                    toastr.success(
+                        'You have successfully removed the working time!'
+                    );
+
+                    $modalInstance.close();
+                }, function(response) {
+                    var data = response.data;
+
+                    if (typeof data.error !== 'undefined') {
+                        toastr.error(
+                            data.error.message
+                        );
+
+                        $modalInstance.dismiss('cancel');
+
+                        $state.go('login', { type: 'employee' });
+                    } else if(typeof data.errors !== 'undefined') {
+                        // When plural, then it spits out the validation errors.
+                        toastr.error(
+                            data.errors[0].message
+                        );
+                    }
+                });
+            }
+
+            function cancel() {
+                $modalInstance.dismiss('cancel');
+            }
 
             return vm;
         }

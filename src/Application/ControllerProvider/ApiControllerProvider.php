@@ -95,7 +95,7 @@ class ApiControllerProvider
         ->bind('api.me.working-time.edit')
         ->before($accessTokenMiddleware);
 
-        $controllers->put(
+        $controllers->delete(
             '/me/working-times/{id}',
             'Application\Controller\ApiController::meWorkingTimesRemoveAction'
         )
