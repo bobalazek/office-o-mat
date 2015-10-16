@@ -1,67 +1,76 @@
-<div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-        <div id="login-employee">
-            <h1>
-                Employee Login
-                <a class="btn btn-xs btn-default"
-                    ui-sref="home">< Back to homepage</a>
-            </h1>
-            <div id="login-employee-list"
-                class="row"
-                ng-if="loginScope.employeesListShown">
-                <div class="col-sm-6"
-                    ng-repeat="employee in loginScope.employees">
-                    <div class="login-employee"
-                        style="margin-bottom: 20px;">
-                        <img class="img-responsive"
-                            ng-src="{{ employee.image_url }}" />
-                        <h4 ng-bind="employee.full_name">John Doe</h4>
-                        <h5 ng-bind="employee.role">CEO</h5>
-                        <button class="btn btn-lg btn-block btn-default"
-                            type="button"
-                            ng-click="loginScope.employeeSelectForLogin(employee)">
-                            Login as
-                            <span ng-bind="employee.full_name">John Doe</span>
-                        </button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div id="login-employee">
+                <h1>
+                    Employee Login
+                    <a class="btn btn-xs btn-default"
+                        ui-sref="home">
+                        < Back to homepage
+                    </a>
+                </h1>
+                <div id="login-employee-list"
+                    class="row"
+                    ng-if="loginScope.employeesListShown">
+                    <div class="col-lg-4 col-md-6"
+                        ng-repeat="employee in loginScope.employees">
+                        <div class="login-employee"
+                            style="margin-bottom: 30px;">
+                            <img class="img-responsive"
+                                ng-src="{{ employee.image_url }}"
+                                style="margin: 0 auto;" />
+                            <h4 ng-bind="employee.full_name">John Doe</h4>
+                            <h5 ng-bind="employee.role">CEO</h5>
+                            <button class="btn btn-lg btn-block btn-default"
+                                type="button"
+                                ng-click="loginScope.employeeSelectForLogin(employee)">
+                                Login as
+                                <span ng-bind="employee.full_name">John Doe</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <form id="login-employee-form"
-                ng-if="loginScope.employeesLoginFormShown">
                 <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3">
-                        <img class="img-responsive"
-                            ng-src="{{ loginScope.employeeSelected.image_url }}"
-                            style="margin: 0 auto;" />
-                        <h4 ng-bind="loginScope.employeeSelected.full_name">John Doe</h4>
-                        <h5 ng-bind="loginScope.employeeSelected.role">CEO</h5>
+                    <div class="col-md-8 col-md-offset-2">
+                        <form id="login-employee-form"
+                            ng-if="loginScope.employeesLoginFormShown">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <img class="img-responsive"
+                                        ng-src="{{ loginScope.employeeSelected.image_url }}"
+                                        style="margin: 0 auto;" />
+                                    <h4 ng-bind="loginScope.employeeSelected.full_name">John Doe</h4>
+                                    <h5 ng-bind="loginScope.employeeSelected.role">CEO</h5>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <input id="login-employee-form-pin-code-input"
+                                    class="form-control input-lg"
+                                    type="password"
+                                    pattern="[0-9]*"
+                                    inputmode="numeric"
+                                    placeholder="PIN Number"
+                                    min="1000"
+                                    max="9999"
+                                    maxlength="4"
+                                    ng-model="loginScope.employeePinNumber"
+                                    style="-webkit-text-security: disc;" />
+                            </div>
+                            <button class="btn btn-lg btn-block btn-default"
+                                type="submit"
+                                ng-click="loginScope.employeeLogin()">
+                                Login
+                            </button>
+                            <button class="btn btn-lg btn-block btn-danger"
+                                type="button"
+                                ng-click="loginScope.employeeLoginCancel()">
+                                Cancel
+                            </button>
+                        </form>
                     </div>
                 </div>
-                <br />
-                <div class="form-group">
-                    <input id="login-employee-form-pin-code-input"
-                        class="form-control input-lg"
-                        type="password"
-                        pattern="[0-9]*"
-                        inputmode="numeric"
-                        placeholder="PIN Number"
-                        min="1000"
-                        max="9999"
-                        maxlength="4"
-                        ng-model="loginScope.employeePinNumber"
-                        style="-webkit-text-security: disc;" />
-                </div>
-                <button class="btn btn-lg btn-block btn-default"
-                    type="submit"
-                    ng-click="loginScope.employeeLogin()">
-                    Login
-                </button>
-                <button class="btn btn-lg btn-block btn-danger"
-                    type="button"
-                    ng-click="loginScope.employeeLoginCancel()">
-                    Cancel
-                </button>
-            </form>
-        </div> <!-- /#login-employee -->
+            </div> <!-- /#login-employee -->
+        </div>
     </div>
 </div>
