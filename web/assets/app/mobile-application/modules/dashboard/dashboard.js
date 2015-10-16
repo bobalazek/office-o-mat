@@ -130,6 +130,7 @@ angular
                             expires: expiresDate,
                         }
                     );
+                    vm.employeeCookie = null;
 
                     $state.go('login', { type: 'employee' });
                 }, function(response) {
