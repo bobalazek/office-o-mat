@@ -55,6 +55,27 @@ Other commands
 ----------------------
 * `sudo php-cs-fixer fix .` - if you want your code fixed before each commit. You will need to install [PHP Coding Standards Fixer](http://cs.sensiolabs.org/)
 
+Preview
+----------------------
+
+### Mobile - Home ###
+![Mobile Home preview](doc/assets/images/mobile-home.png)
+
+### Mobile - Login - Employee ###
+![Mobile Login Employee preview](doc/assets/images/mobile-login-employee.png)
+
+### Mobile - Login - Employee - Detail ###
+![Mobile Login Employee Detail preview](doc/assets/images/mobile-login-employee-detail.png)
+
+### Mobile - Dashboard - Employee ###
+![Mobile Dashboard Employee preview](doc/assets/images/mobile-dashboard-employee.png)
+
+### Mobile - Dashboard - Employee - Working Time - Edit ###
+![Mobile Dashboard Employee preview](doc/assets/images/mobile-dashboard-employee-working-time-edit.png)
+
+### Mobile - Dashboard - Employee - Working Time - Remove ###
+![Mobile Dashboard Employee preview](doc/assets/images/mobile-dashboard-employee-working-time-remove.png)
+
 License
 ----------------------
 Office-O-Mat is licensed under the MIT license.
