@@ -39,11 +39,11 @@ class ApiController
         // Today
         $hoursWorkedToday = 0;
         $result = $app['orm.em']
-            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
                 FROM Application\Entity\WorkingTimeEntity wt
                 WHERE wt.user = :user
                     AND wt.timeEnded IS NOT NULL
-                    AND wt.timeStarted > :timeFrom")
+                    AND wt.timeStarted >= :timeFrom")
             ->setParameter(':user', $app['user'])
             ->setParameter(':timeFrom', $today->format(DATE_ATOM))
             ->getResult()
@@ -55,12 +55,12 @@ class ApiController
         // Yesterday
         $hoursWorkedYesterday = 0;
         $result = $app['orm.em']
-            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
                 FROM Application\Entity\WorkingTimeEntity wt
                 WHERE wt.user = :user
                     AND wt.timeEnded IS NOT NULL
-                    AND wt.timeStarted > :timeFrom
-                    AND wt.timeStarted < :timeTo")
+                    AND wt.timeStarted >= :timeFrom
+                    AND wt.timeStarted <= :timeTo")
             ->setParameter(':user', $app['user'])
             ->setParameter(':timeFrom', $yesterday->format(DATE_ATOM))
             ->setParameter(':timeTo', $today->format(DATE_ATOM))
@@ -73,15 +73,13 @@ class ApiController
         // This Week
         $hoursWorkedThisWeek = 0;
         $result = $app['orm.em']
-            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
                 FROM Application\Entity\WorkingTimeEntity wt
                 WHERE wt.user = :user
                     AND wt.timeEnded IS NOT NULL
-                    AND wt.timeStarted > :timeFrom
-                    AND wt.timeStarted < :timeTo")
+                    AND wt.timeStarted >= :timeFrom")
             ->setParameter(':user', $app['user'])
             ->setParameter(':timeFrom', $thisWeek->format(DATE_ATOM))
-            ->setParameter(':timeTo', $now->format(DATE_ATOM))
             ->getResult()
         ;
         if (isset($result[0]['minutesTotal'])) {
@@ -91,15 +89,13 @@ class ApiController
         // This Month
         $hoursWorkedThisMonth = 0;
         $result = $app['orm.em']
-            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
                 FROM Application\Entity\WorkingTimeEntity wt
                 WHERE wt.user = :user
                     AND wt.timeEnded IS NOT NULL
-                    AND wt.timeStarted > :timeFrom
-                    AND wt.timeStarted < :timeTo")
+                    AND wt.timeStarted >= :timeFrom")
             ->setParameter(':user', $app['user'])
             ->setParameter(':timeFrom', $thisMonth->format(DATE_ATOM))
-            ->setParameter(':timeTo', $now->format(DATE_ATOM))
             ->getResult()
         ;
         if (isset($result[0]['minutesTotal'])) {
@@ -109,15 +105,13 @@ class ApiController
         // This Year
         $hoursWorkedThisYear = 0;
         $result = $app['orm.em']
-            ->createQuery("SELECT TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded) AS minutesTotal
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
                 FROM Application\Entity\WorkingTimeEntity wt
                 WHERE wt.user = :user
                     AND wt.timeEnded IS NOT NULL
-                    AND wt.timeStarted > :timeFrom
-                    AND wt.timeStarted < :timeTo")
+                    AND wt.timeStarted >= :timeFrom")
             ->setParameter(':user', $app['user'])
             ->setParameter(':timeFrom', $thisYear->format(DATE_ATOM))
-            ->setParameter(':timeTo', $now->format(DATE_ATOM))
             ->getResult()
         ;
         if (isset($result[0]['minutesTotal'])) {
@@ -145,7 +139,7 @@ class ApiController
             ->findBy(array(
                 'user' => $app['user'],
             ), array(
-                'timeCreated' => 'DESC',
+                'timeStarted' => 'DESC',
             ))
         ;
 
