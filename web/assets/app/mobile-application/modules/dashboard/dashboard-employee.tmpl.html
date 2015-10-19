@@ -42,7 +42,9 @@
                                 <th>Today</th>
                                 <th>Yesterday</th>
                                 <th>This Week</th>
+                                <th>Last Week</th>
                                 <th>This Month</th>
+                                <th>Last Month</th>
                                 <th>This Year</th>
                             </tr>
                         </thead>
@@ -61,7 +63,15 @@
                                     hours
                                 </td>
                                 <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.last_week"></span>
+                                    hours
+                                </td>
+                                <td>
                                     <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_month"></span>
+                                    hours
+                                </td>
+                                <td>
+                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.last_month"></span>
                                     hours
                                 </td>
                                 <td>

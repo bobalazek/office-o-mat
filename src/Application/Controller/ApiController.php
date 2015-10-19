@@ -33,7 +33,12 @@ class ApiController
         $today = new \Datetime('today');
         $yesterday = new \Datetime('yesterday');
         $thisWeek = new \Datetime('last monday');
+        $lastWeek = clone $thisWeek;
+        $lastWeek = $lastWeek->modify('-1 week');
         $thisMonth = new \Datetime(date('Y-m-01 00:00:00'));
+        $lastMonth = new \Datetime(
+            date('Y-'.(date('m')-1).'-01 00:00:00')
+        );
         $thisYear = new \Datetime(date('Y-01-01 00:00:00'));
 
         // Today
@@ -86,6 +91,24 @@ class ApiController
             $hoursWorkedThisWeek = round($result[0]['minutesTotal'] / 60, 2);
         }
 
+        // Last Week
+        $hoursWorkedLastWeek = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted >= :timeFrom
+                    AND wt.timeStarted <= :timeTo")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $lastWeek->format(DATE_ATOM))
+            ->setParameter(':timeTo', $thisWeek->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedLastWeek = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
         // This Month
         $hoursWorkedThisMonth = 0;
         $result = $app['orm.em']
@@ -100,6 +123,24 @@ class ApiController
         ;
         if (isset($result[0]['minutesTotal'])) {
             $hoursWorkedThisMonth = round($result[0]['minutesTotal'] / 60, 2);
+        }
+
+        // Last Month
+        $hoursWorkedLastMonth = 0;
+        $result = $app['orm.em']
+            ->createQuery("SELECT SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                    AND wt.timeStarted >= :timeFrom
+                    AND wt.timeStarted <= :timeTo")
+            ->setParameter(':user', $app['user'])
+            ->setParameter(':timeFrom', $lastMonth->format(DATE_ATOM))
+            ->setParameter(':timeTo', $thisMonth->format(DATE_ATOM))
+            ->getResult()
+        ;
+        if (isset($result[0]['minutesTotal'])) {
+            $hoursWorkedLastMonth = round($result[0]['minutesTotal'] / 60, 2);
         }
 
         // This Year
@@ -123,7 +164,9 @@ class ApiController
                 'today' => $hoursWorkedToday,
                 'yesterday' => $hoursWorkedYesterday,
                 'this_week' => $hoursWorkedThisWeek,
+                'last_week' => $hoursWorkedLastWeek,
                 'this_month' => $hoursWorkedThisMonth,
+                'last_month' => $hoursWorkedLastMonth,
                 'this_year' => $hoursWorkedThisYear,
             ),
         ));
