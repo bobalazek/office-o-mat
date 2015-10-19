@@ -17,7 +17,7 @@
         {# To-Do: Include the cordova and ionic scripts #}
     {% endif %}
     {{ parent() }}
-    <script id="mobile-config">
+    <script id="mobile-config-js">
         var isInsideCordova = {{ isInsideCordova ? 'true' : 'false' }};
     </script>
     <script id="moment-js"
