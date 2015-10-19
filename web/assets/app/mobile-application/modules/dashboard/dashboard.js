@@ -32,7 +32,12 @@ angular
             // Employee
             vm.employee = null;
             vm.employeeWorkingTimes = [];
-            vm.employeeStatistics = [];
+            vm.employeeStatistics = {
+                hours_worked: [],
+                hours_worked_per_day: [],
+                hours_worked_per_day_keys: [],
+                hours_worked_per_day_values: [],
+            };
             vm.employeeInterval = null;
             vm.employeeSelectedWorkingTime = null;
             vm.employeeData = localStorageService.get('employee');

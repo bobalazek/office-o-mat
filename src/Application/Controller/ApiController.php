@@ -208,6 +208,8 @@ class ApiController
                 'this_year' => $hoursWorkedThisYear,
             ),
             'hours_worked_per_day' => $hoursWorkedPerDay,
+            'hours_worked_per_day_keys' => array_keys($hoursWorkedPerDay),
+            'hours_worked_per_day_values' => array_values($hoursWorkedPerDay),
         ));
     }
 
