@@ -83,12 +83,14 @@
                             </tbody>
                         </table>
                     </div>
-                    <h4>By day</h4>
-                    <canvas id="dashboard-employee-hours-worked-by-day-chart"
-                        class="chart chart-line"
-                        chart-data="[ dashboardScope.employeeStatistics.hours_worked_per_day_values ]"
-                        chart-labels="dashboardScope.employeeStatistics.hours_worked_per_day_keys">
-                    </canvas>
+                    <div id="dashboard-employee-hours-worked-per-day-wrapper">
+                        <h4>Per day</h4>
+                        <canvas id="dashboard-employee-hours-worked-by-day-chart"
+                            class="chart chart-line"
+                            chart-data="[ dashboardScope.employeeStatistics.hours_worked_per_day_values ]"
+                            chart-labels="dashboardScope.employeeStatistics.hours_worked_per_day_keys">
+                        </canvas>
+                    </div> <!-- /#dashboard-employee-hours-worked-per-day-wrapper -->
                 </div> <!-- /#dashboard-employee-hours-worked-wrapper -->
                 <div id="dashboard-employee-working-times-wrapper"
                     class="text-left">
