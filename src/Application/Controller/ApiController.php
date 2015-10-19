@@ -37,9 +37,13 @@ class ApiController
         $lastWeek = $lastWeek->modify('-1 week');
         $thisMonth = new \Datetime(date('Y-m-01 00:00:00'));
         $lastMonth = new \Datetime(
-            date('Y-'.(date('m')-1).'-01 00:00:00')
+            date('Y-'.((int)date('m')-1).'-01 00:00:00')
         );
         $thisYear = new \Datetime(date('Y-01-01 00:00:00'));
+        $hoursWorkedPerDay = array_fill_keys(
+            dateRange('-2 weeks', 'now'),
+            0
+        );
 
         // Today
         $hoursWorkedToday = 0;
@@ -159,6 +163,40 @@ class ApiController
             $hoursWorkedThisYear = round($result[0]['minutesTotal'] / 60, 2);
         }
 
+        // Hours Worked per Day
+        $hoursWorkedPerDayResults = $app['orm.em']
+            ->createQuery("SELECT
+                    DATE(wt.timeStarted) AS date,
+                    SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
+                FROM Application\Entity\WorkingTimeEntity wt
+                WHERE wt.user = :user
+                    AND wt.timeEnded IS NOT NULL
+                GROUP BY date
+                ORDER BY wt.timeStarted DESC")
+            ->setParameter(':user', $app['user'])
+            ->getResult()
+        ;
+
+        if (! empty($hoursWorkedPerDayResults)) {
+            $hoursWorkedPerDayTmp = array();
+
+            foreach ($hoursWorkedPerDay as $date => $hours) {
+                $hours = 0;
+
+                foreach ($hoursWorkedPerDayResults as $hoursWorkedPerDayResult) {
+                    if ($hoursWorkedPerDayResult['date'] == $date) {
+                        $hours = round($hoursWorkedPerDayResult['minutesTotal'] / 60, 2);
+
+                        break;
+                    }
+                }
+
+                $hoursWorkedPerDayTmp[$date] = $hours;
+            }
+
+            $hoursWorkedPerDay = $hoursWorkedPerDayTmp;
+        }
+
         return $app->json(array(
             'hours_worked' => array(
                 'today' => $hoursWorkedToday,
@@ -169,6 +207,7 @@ class ApiController
                 'last_month' => $hoursWorkedLastMonth,
                 'this_year' => $hoursWorkedThisYear,
             ),
+            'hours_worked_per_day' => $hoursWorkedPerDay,
         ));
     }
 
