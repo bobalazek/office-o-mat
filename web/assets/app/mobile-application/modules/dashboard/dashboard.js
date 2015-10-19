@@ -64,7 +64,7 @@ angular
                 }).then(function(response) {
                     var data = response.data;
 
-                    if (vm.employee != data) {
+                    if (vm.employee == null) {
                         vm.employee = data;
 
                         loadEmployeeWorkingTimes();
@@ -81,7 +81,7 @@ angular
                     }
 
                     localStorageService.remove('employee');
-                    
+
                     vm.employeeData = null;
                     vm.employee = null;
                     vm.employeeWorkingTimes = [];
@@ -263,14 +263,14 @@ angular
             }
 
             function save() {
-                if (vm.action == 'new') {
-                    var method = 'POST';
-                    var url = 'api/me/working-times?access_token='+employeeData.access_token;
-                    var successText = 'The working time has been successfully added!';
-                } else {
+                if (vm.action == 'edit') {
                     var method = 'PUT';
                     var url = 'api/me/working-times/'+vm.form.id+'?access_token='+employeeData.access_token;
                     var successText = 'The working time has been successfully edited!';
+                } else {
+                    var method = 'POST';
+                    var url = 'api/me/working-times?access_token='+employeeData.access_token;
+                    var successText = 'The working time has been successfully added!';
                 }
 
                 $http({
