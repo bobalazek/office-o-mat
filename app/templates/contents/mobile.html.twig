@@ -13,7 +13,13 @@
 {% endblock %}
 
 {% block head_javascripts %}
+    {% if isInsideCordova %}
+        {# To-Do: Include the cordova and ionic scripts #}
+    {% endif %}
     {{ parent() }}
+    <script id="mobile-config">
+        var isInsideCordova = {{ isInsideCordova ? 'true' : 'false' }};
+    </script>
     <script id="moment-js"
         type="text/javascript"
         src="{{ app.baseUrl }}/assets/vendor/moment/min/moment-with-locales.min.js"></script>
@@ -29,6 +35,9 @@
     <script id="angular-cookies-js"
         type="text/javascript"
         src="{{ app.baseUrl }}/assets/vendor/angular-cookies/angular-cookies.min.js"></script>
+    <script id="angular-local-storage-js"
+        type="text/javascript"
+        src="{{ app.baseUrl }}/assets/vendor/angular-local-storage/dist/angular-local-storage.min.js"></script>
     <script id="angular-ui-router-js"
         type="text/javascript"
         src="{{ app.baseUrl }}/assets/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>

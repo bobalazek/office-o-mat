@@ -3,7 +3,7 @@ angular
         'mobileApplication.login',
         [
             'ngAnimate',
-            'ngCookies',
+            'LocalStorageModule',
             'ui.router',
             'ui.bootstrap',
             'toastr',
@@ -19,7 +19,7 @@ angular
     })
     .controller (
         'LoginController',
-        function LoginController($rootScope, $scope, $state, $stateParams, $http, $cookies, toastr) {
+        function LoginController($rootScope, $scope, $state, $stateParams, $http, localStorageService, toastr) {
             var vm = this;
 
             vm.type = $stateParams.type;
@@ -82,12 +82,9 @@ angular
 
                     var expiresDate = new Date(data.time_access_token_expires);
 
-                    $cookies.putObject(
+                    localStorageService.set(
                         'employee',
-                        data,
-                        {
-                            expires: expiresDate,
-                        }
+                        data
                     );
 
                     $state.go('dashboard', { type: 'employee' });

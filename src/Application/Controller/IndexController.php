@@ -24,6 +24,8 @@ class IndexController
     {
         $data = array();
 
+        $data['isInsideCordova'] = $request->query->has('inside_cordova');
+
         return new Response(
             $app['twig']->render(
                 'contents/mobile.html.twig',

@@ -7,7 +7,7 @@
     <author email="info@bobalazek.com" href="http://bobalazek.com/">
         Borut Balazek
     </author>
-    <content src="index.html" />
+    <content src="http://localhost/github/bobalazek/office-o-mat/web/mobile?inside_cordova=true" />
     <access origin="*" />
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />

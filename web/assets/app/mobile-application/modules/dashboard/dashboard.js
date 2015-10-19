@@ -19,7 +19,7 @@ angular
     })
     .controller (
         'DashboardController',
-        function DashboardController($rootScope, $scope, $state, $stateParams, $http, $cookies, $interval, $uibModal, toastr) {
+        function DashboardController($rootScope, $scope, $state, $stateParams, $http, $interval, $uibModal, localStorageService, toastr) {
             var vm = this;
 
             vm.type = $stateParams.type;
@@ -34,13 +34,13 @@ angular
             vm.employeeStatistics = [];
             vm.employeeInterval = null;
             vm.employeeSelectedWorkingTime = null;
-            vm.employeeCookie = $cookies.getObject('employee');
+            vm.employeeData = localStorageService.get('employee');
             vm.employeeLogout = employeeLogout;
             vm.employeeWorkingTimeSaveModalOpen = employeeWorkingTimeSaveModalOpen;
             vm.employeeWorkingTimeRemoveModalOpen = employeeWorkingTimeRemoveModalOpen;
 
             if (vm.type == 'employee') {
-                if (vm.employeeCookie) {
+                if (vm.employeeData) {
                     loadEmployee();
 
                     // Run to see if we have any changes AND to force logout the user when session is over
@@ -60,7 +60,7 @@ angular
             function loadEmployee() {
                 $http({
                     method: 'GET',
-                    url: 'api/me?access_token='+vm.employeeCookie.access_token,
+                    url: 'api/me?access_token='+vm.employeeData.access_token,
                 }).then(function(response) {
                     var data = response.data;
 
@@ -80,6 +80,9 @@ angular
                         $interval.cancel(vm.employeeInterval);
                     }
 
+                    localStorageService.remove('employee');
+                    
+                    vm.employeeData = null;
                     vm.employee = null;
                     vm.employeeWorkingTimes = [];
 
@@ -90,7 +93,7 @@ angular
             function loadEmployeeWorkingTimes() {
                 $http({
                     method: 'GET',
-                    url: 'api/me/working-times?access_token='+vm.employeeCookie.access_token,
+                    url: 'api/me/working-times?access_token='+vm.employeeData.access_token,
                 }).then(function(response) {
                     var data = response.data;
 
@@ -99,6 +102,9 @@ angular
                     loadEmployeeStatistics()
                 }, function(response) {
                     var data = response.data;
+
+                    localStorageService.remove('employee');
+                    vm.employeeData = null;
 
                     toastr.error(
                         data.error.message
@@ -111,13 +117,16 @@ angular
             function loadEmployeeStatistics() {
                 $http({
                     method: 'GET',
-                    url: 'api/me/statistics?access_token='+vm.employeeCookie.access_token,
+                    url: 'api/me/statistics?access_token='+vm.employeeData.access_token,
                 }).then(function(response) {
                     var data = response.data;
 
                     vm.employeeStatistics = data;
                 }, function(response) {
                     var data = response.data;
+
+                    localStorageService.remove('employee');
+                    vm.employeeData = null;
 
                     toastr.error(
                         data.error.message
@@ -130,35 +139,26 @@ angular
             function employeeLogout() {
                 $http({
                     method: 'GET',
-                    url: 'api/mobile/logout?access_token='+vm.employeeCookie.access_token,
+                    url: 'api/mobile/logout?access_token='+vm.employeeData.access_token,
                 }).then(function(response) {
                     var data = response.data;
-
-                    toastr.success(
-                        'You have successfully logged out!'
-                    );
 
                     if (vm.employeeInterval != null) {
                         $interval.cancel(vm.employeeInterval);
                     }
 
-                    var expiresDate = new Date();
-                    $cookies.putObject(
-                        'employee',
-                        null,
-                        {
-                            expires: expiresDate,
-                        }
+                    toastr.success(
+                        'You have successfully logged out!'
                     );
-                    vm.employeeCookie = null;
-
-                    $state.go('login', { type: 'employee' });
                 }, function(response) {
                     var data = response.data;
 
                     toastr.error(
                         data.error.message
                     );
+                }).finally(function() {
+                    localStorageService.remove('employee');
+                    vm.employeeData = null;
 
                     $state.go('login', { type: 'employee' });
                 });
@@ -171,7 +171,7 @@ angular
                     controller: 'EmployeeWorkingTimesSaveModalController as employeeWorkingTimesSaveModalScope',
                     resolve: {
                         selectedWorkingTime: selectedWorkingTime,
-                        employeeCookie: vm.employeeCookie,
+                        employeeData: vm.employeeData,
                     },
                 });
 
@@ -191,7 +191,7 @@ angular
                     controller: 'EmployeeWorkingTimesRemoveModalController as employeeWorkingTimesRemoveModalScope',
                     resolve: {
                         selectedWorkingTime: selectedWorkingTime,
-                        employeeCookie: vm.employeeCookie,
+                        employeeData: vm.employeeData,
                     },
                 });
 
@@ -210,7 +210,7 @@ angular
     )
     .controller (
         'EmployeeWorkingTimesSaveModalController',
-        function EmployeeWorkingTimesSaveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeCookie) {
+        function EmployeeWorkingTimesSaveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeData) {
             var vm = this;
 
             vm.timeStartedCalendarIsOpen = false;
@@ -265,11 +265,11 @@ angular
             function save() {
                 if (vm.action == 'new') {
                     var method = 'POST';
-                    var url = 'api/me/working-times?access_token='+employeeCookie.access_token;
+                    var url = 'api/me/working-times?access_token='+employeeData.access_token;
                     var successText = 'The working time has been successfully added!';
                 } else {
                     var method = 'PUT';
-                    var url = 'api/me/working-times/'+vm.form.id+'?access_token='+employeeCookie.access_token;
+                    var url = 'api/me/working-times/'+vm.form.id+'?access_token='+employeeData.access_token;
                     var successText = 'The working time has been successfully edited!';
                 }
 
@@ -315,7 +315,7 @@ angular
     )
     .controller (
         'EmployeeWorkingTimesRemoveModalController',
-        function EmployeeWorkingTimesRemoveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeCookie) {
+        function EmployeeWorkingTimesRemoveModalController($scope, $modalInstance, $state, $http, toastr, selectedWorkingTime, employeeData) {
             var vm = this;
 
             vm.confirm = confirm;
@@ -325,7 +325,7 @@ angular
             function confirm() {
                 $http({
                     method: 'DELETE',
-                    url: 'api/me/working-times/'+selectedWorkingTime.id+'?access_token='+employeeCookie.access_token,
+                    url: 'api/me/working-times/'+selectedWorkingTime.id+'?access_token='+employeeData.access_token,
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
