@@ -34,117 +34,119 @@
             <div id="dashboard-employee-statistics-wrapper"
                 class="text-left">
                 <h2>Statistics</h2>
-                <h3>Hours Worked</h3>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Today</th>
-                                <th>Yesterday</th>
-                                <th>This Week</th>
-                                <th>Last Week</th>
-                                <th>This Month</th>
-                                <th>Last Month</th>
-                                <th>This Year</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.today"></span>
-                                    hours
-                                </td>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.yesterday"></span>
-                                    hours
-                                </td>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_week"></span>
-                                    hours
-                                </td>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.last_week"></span>
-                                    hours
-                                </td>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_month"></span>
-                                    hours
-                                </td>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.last_month"></span>
-                                    hours
-                                </td>
-                                <td>
-                                    <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_year"></span>
-                                    hours
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div> <!-- /#dashboard-employee-statistics-wrapper -->
-            <div id="dashboard-employee-working-times-wrapper"
-                class="text-left">
-                <h2>
-                    Working Times
-                    <button class="btn btn-sm btn-default"
-                        ng-click="dashboardScope.employeeWorkingTimeSaveModalOpen()">
-                        New
-                    </button>
-                </h2>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Time Started</th>
-                                <th>Time Ended</th>
-                                <th>Duration</th>
-                                <th>Notes</th>
-                                <th>Location</th>
-                                <th width="100">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-if="dashboardScope.employeeWorkingTimes.length == 0">
-                                <td colspan="5">
-                                    You do not have any working times yet!
-                                </td>
-                            </tr>
-                            <tr id="working-time-{{ workingTime.id }}"
-                                ng-class="{ info: workingTime == dashboardScope.employeeSelectedWorkingTime }"
-                                ng-repeat="workingTime in dashboardScope.employeeWorkingTimes">
-                                <td>
-                                    <time ng-bind="workingTime.time_started | date : 'yyyy-MM-dd HH:mm:ss'"></time>
-                                </td>
-                                <td>
-                                    <time ng-bind="workingTime.time_ended | date : 'yyyy-MM-dd HH:mm:ss'"
-                                        ng-if="workingTime.time_ended"></time>
-                                </td>
-                                <td>
-                                    <div ng-if="workingTime.time_ended">
-                                        <span ng-bind="{{ (workingTime.time_ended | amDifference : workingTime.time_started : 'minutes') / 60 | number : 2 }}"></span>
+                <div id="dashboard-employee-hours-worked-wrapper">
+                    <h3>Hours Worked</h3>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Today</th>
+                                    <th>Yesterday</th>
+                                    <th>This Week</th>
+                                    <th>Last Week</th>
+                                    <th>This Month</th>
+                                    <th>Last Month</th>
+                                    <th>This Year</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.today"></span>
                                         hours
-                                    </div>
-                                </td>
-                                <td ng-bind="workingTime.notes"></td>
-                                <td ng-bind="workingTime.location"></td>
-                                <td>
-                                    <button class="btn btn-sm btn-default"
-                                        ng-click="dashboardScope.employeeWorkingTimeSaveModalOpen(workingTime)">
-        								<i class="fa fa-fw fa-cog"></i>
-        							</button>
-        							<button class="btn btn-sm btn-danger"
-                                        ng-click="dashboardScope.employeeWorkingTimeRemoveModalOpen(workingTime)">
-        								<i class="fa fa-fw fa-times"></i>
-        							</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> <!-- /.table-responsive -->
-            </div> <!-- /#dashboard-employee-working-times-wrapper -->
+                                    </td>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.yesterday"></span>
+                                        hours
+                                    </td>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_week"></span>
+                                        hours
+                                    </td>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.last_week"></span>
+                                        hours
+                                    </td>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_month"></span>
+                                        hours
+                                    </td>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.last_month"></span>
+                                        hours
+                                    </td>
+                                    <td>
+                                        <span ng-bind="dashboardScope.employeeStatistics.hours_worked.this_year"></span>
+                                        hours
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- /#dashboard-employee-hours-worked-wrapper -->
+                <div id="dashboard-employee-working-times-wrapper"
+                    class="text-left">
+                    <h3>
+                        Working Times
+                        <button class="btn btn-sm btn-default"
+                            ng-click="dashboardScope.employeeWorkingTimeSaveModalOpen()">
+                            New
+                        </button>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Time Started</th>
+                                    <th>Time Ended</th>
+                                    <th>Duration</th>
+                                    <th>Notes</th>
+                                    <th>Location</th>
+                                    <th width="100">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="dashboardScope.employeeWorkingTimes.length == 0">
+                                    <td colspan="5">
+                                        You do not have any working times yet!
+                                    </td>
+                                </tr>
+                                <tr id="working-time-{{ workingTime.id }}"
+                                    ng-class="{ info: workingTime == dashboardScope.employeeSelectedWorkingTime }"
+                                    ng-repeat="workingTime in dashboardScope.employeeWorkingTimes">
+                                    <td>
+                                        <time ng-bind="workingTime.time_started | date : 'yyyy-MM-dd HH:mm:ss'"></time>
+                                    </td>
+                                    <td>
+                                        <time ng-bind="workingTime.time_ended | date : 'yyyy-MM-dd HH:mm:ss'"
+                                            ng-if="workingTime.time_ended"></time>
+                                    </td>
+                                    <td>
+                                        <div ng-if="workingTime.time_ended">
+                                            <span ng-bind="{{ (workingTime.time_ended | amDifference : workingTime.time_started : 'minutes') / 60 | number : 2 }}"></span>
+                                            hours
+                                        </div>
+                                    </td>
+                                    <td ng-bind="workingTime.notes"></td>
+                                    <td ng-bind="workingTime.location"></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-default"
+                                            ng-click="dashboardScope.employeeWorkingTimeSaveModalOpen(workingTime)">
+            								<i class="fa fa-fw fa-cog"></i>
+            							</button>
+            							<button class="btn btn-sm btn-danger"
+                                            ng-click="dashboardScope.employeeWorkingTimeRemoveModalOpen(workingTime)">
+            								<i class="fa fa-fw fa-times"></i>
+            							</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> <!-- /.table-responsive -->
+                </div> <!-- /#dashboard-employee-working-times-wrapper -->
+            </div> <!-- /#dashboard-employee-statistics-wrapper -->
         </div>
     </div>
 </div>

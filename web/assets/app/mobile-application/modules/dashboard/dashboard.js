@@ -7,6 +7,7 @@ angular
             'ui.bootstrap.datetimepicker',
             'angularMoment',
             'ngAnimate',
+            'chart.js',
         ]
     )
     .config( function($stateProvider) {
