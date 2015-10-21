@@ -3,7 +3,6 @@ README
 **Office-O-Mat**
 
 A simple web application for office use, such as time and events tracking, employment management and more!
-Actually, this will just be the backend for the mobile version, which will be done soon!
 
 Build status
 -------------------
