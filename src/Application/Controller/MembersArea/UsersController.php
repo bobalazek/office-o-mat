@@ -356,15 +356,42 @@ class UsersController
         $timeTo = $formData['date']->format('Y-m-d').' 23:59:59';
 
         if ($formData['period'] == 'month') {
-            $daysPerMonth = date('t');
+            $daysPerMonth = $formData['date']->format('t');
             $timeFrom = $formData['date']->format('Y-m-').'01 00:00:00';
             $timeTo = $formData['date']->format('Y-m-').$daysPerMonth.' 23:59:59';
 
             $showChart = true;
-            $chartLabels = array_map(function($a) {
-                return ($a <= 9 ? '0'.$a : $a).'.';
+            $chartLabels = array_map(function($a) use ($formData) {
+                return ($a <= 9 ? '0'.$a : $a).'. '.$formData['date']->format('M');
             }, range(1, $daysPerMonth));
             $chartData = array_fill(0, $daysPerMonth, 0);
+
+            $result = $app['orm.em']
+                ->createQuery(
+                    "SELECT
+                        DATE(wt.timeStarted) AS date,
+                        SUM(TIMESTAMPDIFF(MINUTE, wt.timeStarted, wt.timeEnded)) AS minutesTotal
+                    FROM Application\Entity\WorkingTimeEntity wt
+                    WHERE wt.user = :user
+                        AND wt.timeEnded IS NOT NULL
+                        AND wt.timeStarted >= :timeFrom
+                        AND wt.timeStarted <= :timeTo
+                    GROUP BY date
+                    ORDER BY wt.timeStarted DESC"
+                )
+                ->setParameter(':user', $user)
+                ->setParameter(':timeFrom', $timeFrom)
+                ->setParameter(':timeTo', $timeTo)
+                ->getResult()
+            ;
+
+            if ($result) {
+                foreach ($result as $singleResult) {
+                    $day = (int) substr($singleResult['date'], -2);
+
+                    $chartData[$day -1] = round($singleResult['minutesTotal'] / 60, 2);
+                }
+            }
         }
 
         $workingTimeResults = $app['orm.em']

@@ -55,12 +55,6 @@
             {{ form_end(form) }}
         </div>
     </div>
-    {# WIP
-        <h2>
-            {{ 'Chart' }}
-        </h2>
-        <canvas id="chart" width="480" height="240"></canvas>
-    #}
     <h2>
         {{ 'Working Times' | trans }}
 		{% if formData.period == 'day' %}
@@ -114,13 +108,20 @@
 			</tbody>
 		</table>
 	</div>
+	{% if showChart %}
+        <h2>
+            {{ 'Chart' }}
+			<small>{{ formData.date | date('Y-m') }}</small>
+        </h2>
+        <canvas id="chart" width="480" height="240"></canvas>
+    {% endif %}
 {% endblock %}
 
 {% block body_javascripts %}
     {{ parent() }}
     <script>
         jQuery(document).ready(function() {
-            {# WIP
+            {% if showChart %}
                 Chart.defaults.global.responsive = true;
                 var ctx = jQuery('#chart').get(0).getContext("2d");
                 var chart = new Chart(ctx).Line({
@@ -136,7 +137,7 @@
                         },
                     ],
                 });
-            #}
+            {% endif %}
 
             function workingTimesPeriodChanged() {
                 var val = jQuery('#period').val();
