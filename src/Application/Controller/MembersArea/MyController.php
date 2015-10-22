@@ -232,7 +232,7 @@ class MyController
             $app->abort(404);
         }
 
-        if($workingTime->getUser() != $app['user']) {
+        if ($workingTime->getUser() != $app['user']) {
             $app->abort(403);
         }
 
@@ -289,7 +289,7 @@ class MyController
             $app->abort(404);
         }
 
-        if($workingTime->getUser() != $app['user']) {
+        if ($workingTime->getUser() != $app['user']) {
             $app->abort(403);
         }
 

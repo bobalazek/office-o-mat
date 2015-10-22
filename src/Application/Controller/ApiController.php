@@ -37,7 +37,7 @@ class ApiController
         $lastWeek = $lastWeek->modify('-1 week');
         $thisMonth = new \Datetime(date('Y-m-01 00:00:00'));
         $lastMonth = new \Datetime(
-            date('Y-'.((int)date('m')-1).'-01 00:00:00')
+            date('Y-'.((int) date('m')-1).'-01 00:00:00')
         );
         $thisYear = new \Datetime(date('Y-01-01 00:00:00'));
         $hoursWorkedPerDay = array_fill_keys(
@@ -437,7 +437,7 @@ class ApiController
             return $app->json(array(
                 'error' => array(
                     'message' => 'No user with this ID found.',
-                )
+                ),
             ), 404);
         }
 
@@ -448,7 +448,7 @@ class ApiController
             return $app->json(array(
                 'error' => array(
                     'message' => 'Wrong PIN Number.',
-                )
+                ),
             ), 403);
         }
 
