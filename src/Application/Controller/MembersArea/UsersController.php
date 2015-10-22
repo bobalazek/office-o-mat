@@ -322,10 +322,10 @@ class UsersController
             ->add('period', 'choice', array(
                 'choices' => array(
                     'day' => 'Day',
-                    'week' => 'Week',
-                    'month' => 'Month',
-                    'year' => 'Year',
-                    'range' => 'Range',
+                    // 'week' => 'Week',
+                    // 'month' => 'Month',
+                    // 'year' => 'Year',
+                    // 'range' => 'Range', // To-Do!
                 ),
             ))
             ->add('Save', 'submit', array(
@@ -340,18 +340,53 @@ class UsersController
 
         if ($form->isValid()) {
             $formData = $form->getData();
+        } else {
+            // To-Do: Throw an error or something
         }
+
+        $showChart = false;
+        $daysPerMonth = date('t');
+        $chartLabels = array_map(function($a) {
+            return ($a <= 9 ? '0'.$a : $a).'.';
+        }, range(1, $daysPerMonth));
+        $chartData = array_fill(0, $daysPerMonth, 0);
 
         $workingTimeResults = $app['orm.em']
             ->createQueryBuilder()
             ->select('wt')
             ->from('Application\Entity\WorkingTimeEntity', 'wt')
-            ->where('wt.user = :user')
+            ->leftJoin('wt.user', 'u')
+            ->where('wt.user = :user
+                AND wt.timeStarted >= :timeFrom
+                AND wt.timeStarted <= :timeTo')
             ->setParameter(':user', $user)
+            ->setParameter(':timeFrom', $formData['date']->format('Y-m-d').' 00:00:00')
+            ->setParameter(':timeTo', $formData['date']->format('Y-m-d').' 23:59:59')
         ;
 
+        $pagination = $app['paginator']->paginate(
+            $workingTimeResults,
+            1,
+            999,
+            array(
+                'route' => 'members-area.users.working-times',
+                'routeParameters' => array(
+                    'id' => $user->getId(),
+                ),
+                'defaultSortFieldName' => 'wt.timeCreated',
+                'defaultSortDirection' => 'desc',
+            )
+        );
+
+        $data['pagination'] = $pagination;
+
         $data['user'] = $user;
+        $data['showChart'] = $showChart;
+        $data['chartLabels'] = $chartLabels;
+        $data['chartData'] = $chartData;
         $data['form'] = $form->createView();
+        $data['formData'] = $formData;
+        $data['pagination'] = $pagination;
 
         return new Response(
             $app['twig']->render(

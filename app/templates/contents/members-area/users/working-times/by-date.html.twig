@@ -44,7 +44,9 @@
                     <div class="col-md-4">
                         {{ form_row(form.date) }}
                     </div>
-                    <div class="col-md-4">
+                    <div id="date-to-col"
+                        class="col-md-4 "
+                        style="display: {{ form.period.vars.value == 'range' ? 'block' : 'none' }};">
                         {{ form_row(form.dateTo) }}
                     </div>
                     <div class="col-md-4">
@@ -54,5 +56,99 @@
             {{ form_end(form) }}
         </div>
     </div>
-    GRAPH HERE - WIP
+    {# WIP
+        <h2>
+            {{ 'Chart' }}
+        </h2>
+        <canvas id="chart" width="480" height="240"></canvas>
+    #}
+    <h2>
+        {{ 'Working Times' | trans }}
+        <small>{{ formData.date | date('Y-m-d') }}</small>
+    </h2>
+    <div class="table-responsive">
+		<table class="table table-striped table-condensed">
+			<thead>
+				<tr>
+					<th>{{ paginator_sortable(pagination, 'Time Started', 'wt.timeStarted') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Time Ended', 'wt.timeEnded') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Notes', 'wt.notes') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Location', 'wt.location') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Time Created', 'wt.timeCreated') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Time Updated', 'wt.timeUpdated') }}</th>
+					<th width="100">{{ 'Actions'|trans }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for workingTime in pagination.getItems() %}
+					<tr>
+						<td>{{ workingTime.getTimeStarted()|date(app.dateTimeFormat) }}</td>
+						<td>{{ workingTime.getTimeEnded()
+							? workingTime.getTimeEnded()|date(app.dateTimeFormat)
+							: '' }}</td>
+						<td>{{ workingTime.getNotes() }}</td>
+						<td>{{ workingTime.getLocation() }}</td>
+						<td>{{ workingTime.getTimeCreated()|date(app.dateTimeFormat) }}</td>
+						<td>{{ workingTime.getTimeUpdated()|date(app.dateTimeFormat) }}</td>
+						<td>
+							<a class="btn btn-sm btn-default filter-submit margin-bottom"
+								data-toggle="tooltip" title="{{ 'Edit'|trans }}"
+								href="{{ url('members-area.working-times.edit', { id : workingTime.getId() }) }}">
+								<i class="fa fa-fw fa-cog"></i>
+							</a>
+							<a class="btn btn-sm btn-default filter-submit margin-bottom"
+								data-toggle="tooltip" title="{{ 'Remove'|trans }}"
+								href="{{ url('members-area.working-times.remove', { id : workingTime.getId() }) }}">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="99">{{ 'No working times yet'|trans }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block body_javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function() {
+            {# WIP
+                Chart.defaults.global.responsive = true;
+                var ctx = jQuery('#chart').get(0).getContext("2d");
+                var chart = new Chart(ctx).Line({
+                    labels: {{ chartLabels | json_encode | raw }},
+                    datasets: [
+                        {
+                            label: "Data",
+                            fillColor: "rgba(220, 220, 220, 0.5)",
+                            strokeColor: "rgba(220, 220, 220, 0.8)",
+                            highlightFill: "rgba(220, 220, 220, 0.75)",
+                            highlightStroke: "rgba(220, 220, 220, 1)",
+                            data: {{ chartData | json_encode }},
+                        },
+                    ],
+                });
+            #}
+
+            function workingTimesPeriodChanged() {
+                var val = jQuery('#form_period').val();
+
+                if(val == 'range') {
+                    jQuery('#date-to-col').fadeIn();
+                } else {
+                    jQuery('#date-to-col').fadeOut();
+                }
+            }
+            workingTimesPeriodChanged();
+
+            jQuery('#form_period').on('change', function() {
+                workingTimesPeriodChanged();
+            });
+        });
+    </script>
 {% endblock %}
