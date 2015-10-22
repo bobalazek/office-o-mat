@@ -38,15 +38,14 @@
             {{ 'Search' | trans }}
         </div>
         <div class="panel-body">
-            {{ form_start(form) }}
+            {{ form_start(form, { method: 'GET' }) }}
                 {{ form_errors(form) }}
                 <div class="row">
                     <div class="col-md-4">
                         {{ form_row(form.date) }}
                     </div>
                     <div id="date-to-col"
-                        class="col-md-4 "
-                        style="display: {{ form.period.vars.value == 'range' ? 'block' : 'none' }};">
+                        class="col-md-4">
                         {{ form_row(form.dateTo) }}
                     </div>
                     <div class="col-md-4">
@@ -64,7 +63,11 @@
     #}
     <h2>
         {{ 'Working Times' | trans }}
-        <small>{{ formData.date | date('Y-m-d') }}</small>
+		{% if formData.period == 'day' %}
+        	<small>{{ formData.date | date('Y-m-d') }}</small>
+		{% elseif formData.period == 'month' %}
+			<small>{{ formData.date | date('Y-m') }}</small>
+		{% endif %}
     </h2>
     <div class="table-responsive">
 		<table class="table table-striped table-condensed">
@@ -136,17 +139,23 @@
             #}
 
             function workingTimesPeriodChanged() {
-                var val = jQuery('#form_period').val();
+                var val = jQuery('#period').val();
 
                 if(val == 'range') {
                     jQuery('#date-to-col').fadeIn();
                 } else {
                     jQuery('#date-to-col').fadeOut();
                 }
+
+				if(val == 'month') {
+                    jQuery('#date_day').fadeOut();
+                } else {
+                    jQuery('#date_day').fadeIn();
+                }
             }
             workingTimesPeriodChanged();
 
-            jQuery('#form_period').on('change', function() {
+            jQuery('#period').on('change', function() {
                 workingTimesPeriodChanged();
             });
         });

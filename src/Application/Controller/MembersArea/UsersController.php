@@ -313,17 +313,22 @@ class UsersController
             'period' => 'day',
         );
         $form = $app['form.factory']
-            ->createBuilder(
+            ->createNamedBuilder(
+                '',
                 'form',
-                $formData
+                $formData,
+                array(
+                    'csrf_protection' => false,
+                    'allow_extra_fields' => true,
+                )
             )
+            ->setMethod('GET')
             ->add('date', 'date')
             ->add('dateTo', 'date')
             ->add('period', 'choice', array(
                 'choices' => array(
                     'day' => 'Day',
-                    // 'week' => 'Week',
-                    // 'month' => 'Month',
+                    'month' => 'Month',
                     // 'year' => 'Year',
                     // 'range' => 'Range', // To-Do!
                 ),
@@ -345,11 +350,22 @@ class UsersController
         }
 
         $showChart = false;
-        $daysPerMonth = date('t');
-        $chartLabels = array_map(function($a) {
-            return ($a <= 9 ? '0'.$a : $a).'.';
-        }, range(1, $daysPerMonth));
-        $chartData = array_fill(0, $daysPerMonth, 0);
+        $chartLabels = array();
+        $chartData = array();
+        $timeFrom = $formData['date']->format('Y-m-d').' 00:00:00';
+        $timeTo = $formData['date']->format('Y-m-d').' 23:59:59';
+
+        if ($formData['period'] == 'month') {
+            $daysPerMonth = date('t');
+            $timeFrom = $formData['date']->format('Y-m-').'01 00:00:00';
+            $timeTo = $formData['date']->format('Y-m-').$daysPerMonth.' 23:59:59';
+
+            $showChart = true;
+            $chartLabels = array_map(function($a) {
+                return ($a <= 9 ? '0'.$a : $a).'.';
+            }, range(1, $daysPerMonth));
+            $chartData = array_fill(0, $daysPerMonth, 0);
+        }
 
         $workingTimeResults = $app['orm.em']
             ->createQueryBuilder()
@@ -360,8 +376,8 @@ class UsersController
                 AND wt.timeStarted >= :timeFrom
                 AND wt.timeStarted <= :timeTo')
             ->setParameter(':user', $user)
-            ->setParameter(':timeFrom', $formData['date']->format('Y-m-d').' 00:00:00')
-            ->setParameter(':timeTo', $formData['date']->format('Y-m-d').' 23:59:59')
+            ->setParameter(':timeFrom', $timeFrom)
+            ->setParameter(':timeTo', $timeTo)
         ;
 
         $pagination = $app['paginator']->paginate(
@@ -369,7 +385,7 @@ class UsersController
             1,
             999,
             array(
-                'route' => 'members-area.users.working-times',
+                'route' => 'members-area.users.working-times.by-date',
                 'routeParameters' => array(
                     'id' => $user->getId(),
                 ),
