@@ -272,7 +272,10 @@ class UsersController
             $currentPage,
             $limitPerPage,
             array(
-                'route' => 'members-area.working-times',
+                'route' => 'members-area.users.working-times',
+                'routeParameters' => array(
+                    'id' => $user->getId(),
+                ),
                 'defaultSortFieldName' => 'wt.timeCreated',
                 'defaultSortDirection' => 'desc',
             )
@@ -284,6 +287,75 @@ class UsersController
         return new Response(
             $app['twig']->render(
                 'contents/members-area/users/working-times.html.twig',
+                $data
+            )
+        );
+    }
+
+    public function workingTimesByDateAction($id, Request $request, Application $app)
+    {
+        $data = array();
+
+        if (! $app['security']->isGranted('ROLE_USERS_EDITOR')
+            && ! $app['security']->isGranted('ROLE_ADMIN')) {
+            $app->abort(403);
+        }
+
+        $user = $app['orm.em']->find('Application\Entity\UserEntity', $id);
+
+        if (! $user) {
+            $app->abort(404);
+        }
+
+        $formData = array(
+            'date' => new \Datetime(),
+            'dateTo' => new \Datetime(),
+            'period' => 'day',
+        );
+        $form = $app['form.factory']
+            ->createBuilder(
+                'form',
+                $formData
+            )
+            ->add('date', 'date')
+            ->add('dateTo', 'date')
+            ->add('period', 'choice', array(
+                'choices' => array(
+                    'day' => 'Day',
+                    'week' => 'Week',
+                    'month' => 'Month',
+                    'year' => 'Year',
+                    'range' => 'Range',
+                ),
+            ))
+            ->add('Save', 'submit', array(
+                'attr' => array(
+                    'class' => 'btn-primary btn-lg btn-block',
+                ),
+            ))
+            ->getForm()
+        ;
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $formData = $form->getData();
+        }
+
+        $workingTimeResults = $app['orm.em']
+            ->createQueryBuilder()
+            ->select('wt')
+            ->from('Application\Entity\WorkingTimeEntity', 'wt')
+            ->where('wt.user = :user')
+            ->setParameter(':user', $user)
+        ;
+
+        $data['user'] = $user;
+        $data['form'] = $form->createView();
+
+        return new Response(
+            $app['twig']->render(
+                'contents/members-area/users/working-times/by-date.html.twig',
                 $data
             )
         );

@@ -49,6 +49,12 @@ class PaginatorExtension extends \Twig_Extension
         ;
         $route = $paginationData['route'];
         $routeParameters = $this->app['request']->query->all();
+        if (isset($paginationData['routeParameters'])) {
+            $routeParameters = array_merge(
+                $routeParameters,
+                $paginationData['routeParameters']
+            );
+        }
         $pageCount = ceil(
             intval($paginationData['totalCount']) /
             intval($paginationData['numItemsPerPage'])
@@ -147,6 +153,12 @@ class PaginatorExtension extends \Twig_Extension
         $paginationData = $pagination->getPaginationData();
         $route = $paginationData['route'];
         $routeParameters = $this->app['request']->query->all();
+        if (isset($paginationData['routeParameters'])) {
+            $routeParameters = array_merge(
+                $routeParameters,
+                $paginationData['routeParameters']
+            );
+        }
         $routeParameters = array_merge(
             $routeParameters,
             array(

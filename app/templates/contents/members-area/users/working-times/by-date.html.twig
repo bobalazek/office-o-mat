@@ -1,0 +1,58 @@
+{% extends 'layouts/content/members-area.html.twig' %}
+
+{% block title %}{{ 'Working Times by Date'|trans }} | {{ user }} | {{ 'Users'|trans }} | {{ parent() }}{% endblock %}
+
+{% block main %}
+	<h1>
+		{{ 'Working Times by Date'|trans }}
+        <br />
+		<small>{{ user }}</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li>
+			<a href="{{ url('members-area') }}">
+				{{ 'Home' | trans }}
+			</a>
+		</li>
+        <li>
+			<a href="{{ url('members-area.users') }}">
+				{{ 'Users' | trans }}
+			</a>
+		</li>
+        <li>
+			<a href="{{ url('members-area.users.edit', { id: user.getId() }) }}">
+				{{ user }}
+			</a>
+		</li>
+        <li>
+			<a href="{{ url('members-area.users.working-times', { id: user.getId() }) }}">
+				{{ 'Working Times' | trans }}
+			</a>
+		</li>
+		<li class="active">
+			{{ 'By Date' | trans }}
+		</li>
+	</ol>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{ 'Search' | trans }}
+        </div>
+        <div class="panel-body">
+            {{ form_start(form) }}
+                {{ form_errors(form) }}
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form_row(form.date) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form_row(form.dateTo) }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form_row(form.period) }}
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    GRAPH HERE - WIP
+{% endblock %}

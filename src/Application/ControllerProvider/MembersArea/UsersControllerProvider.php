@@ -42,6 +42,12 @@ class UsersControllerProvider implements ControllerProviderInterface
         ->bind('members-area.users.working-times');
 
         $controllers->match(
+            '/{id}/working-times/by-date',
+            'Application\Controller\MembersArea\UsersController::workingTimesByDateAction'
+        )
+        ->bind('members-area.users.working-times.by-date');
+
+        $controllers->match(
             '/{id}/remove',
             'Application\Controller\MembersArea\UsersController::removeAction'
         )

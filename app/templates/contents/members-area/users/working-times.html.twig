@@ -5,6 +5,10 @@
 {% block main %}
 	<h1>
 		{{ 'Working Times'|trans }}
+        <a class="btn btn-primary btn-sm"
+            href="{{ url('members-area.users.working-times.by-date', { id: user.getId() }) }}">
+            {{ 'By Date'|trans }}
+        </a>
         <br />
 		<small>{{ user }}</small>
 	</h1>
