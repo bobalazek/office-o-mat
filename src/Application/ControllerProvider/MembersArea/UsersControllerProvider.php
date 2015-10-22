@@ -36,6 +36,12 @@ class UsersControllerProvider implements ControllerProviderInterface
         ->bind('members-area.users.edit');
 
         $controllers->match(
+            '/{id}/working-times',
+            'Application\Controller\MembersArea\UsersController::workingTimesAction'
+        )
+        ->bind('members-area.users.working-times');
+
+        $controllers->match(
             '/{id}/remove',
             'Application\Controller\MembersArea\UsersController::removeAction'
         )

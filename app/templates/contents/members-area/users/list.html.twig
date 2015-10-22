@@ -42,7 +42,7 @@
 					<th width="200">{{ 'Roles' | trans }}</th>
 					<th width="160">{{ paginator_sortable(pagination, 'Time created', 'u.timeCreated') }}</th>
 					<th width="160">{{ paginator_sortable(pagination, 'Time last active', 'u.timeLastActive') }}</th>
-					<th width="200">{{ 'Actions'|trans }}</th>
+					<th width="220">{{ 'Actions'|trans }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -127,6 +127,11 @@
 								</a>
 							{% endif %}
 							<a class="btn btn-sm btn-default"
+								data-toggle="tooltip" title="{{ 'Working Times'|trans }}"
+								href="{{ url('members-area.users.working-times', { id : user.getId() }) }}">
+								<i class="fa fa-fw fa-clock-o"></i>
+							</a>
+							<a class="btn btn-sm btn-danger"
 								data-toggle="tooltip" title="{{ 'Remove'|trans }}"
 								href="{{ url('members-area.users.remove', { id : user.getId() }) }}">
 								<i class="fa fa-fw fa-times"></i>

@@ -240,6 +240,55 @@ class UsersController
         );
     }
 
+    public function workingTimesAction($id, Request $request, Application $app)
+    {
+        $data = array();
+
+        if (! $app['security']->isGranted('ROLE_USERS_EDITOR')
+            && ! $app['security']->isGranted('ROLE_ADMIN')) {
+            $app->abort(403);
+        }
+
+        $user = $app['orm.em']->find('Application\Entity\UserEntity', $id);
+
+        if (! $user) {
+            $app->abort(404);
+        }
+
+        $limitPerPage = $request->query->get('limit_per_page', 20);
+        $currentPage = $request->query->get('page');
+
+        $workingTimeResults = $app['orm.em']
+            ->createQueryBuilder()
+            ->select('wt')
+            ->from('Application\Entity\WorkingTimeEntity', 'wt')
+            ->leftJoin('wt.user', 'u')
+            ->where('wt.user = :user')
+            ->setParameter(':user', $user)
+        ;
+
+        $pagination = $app['paginator']->paginate(
+            $workingTimeResults,
+            $currentPage,
+            $limitPerPage,
+            array(
+                'route' => 'members-area.working-times',
+                'defaultSortFieldName' => 'wt.timeCreated',
+                'defaultSortDirection' => 'desc',
+            )
+        );
+
+        $data['pagination'] = $pagination;
+        $data['user'] = $user;
+
+        return new Response(
+            $app['twig']->render(
+                'contents/members-area/users/working-times.html.twig',
+                $data
+            )
+        );
+    }
+
     public function removeAction($id, Request $request, Application $app)
     {
         $data = array();

@@ -1,0 +1,77 @@
+{% extends 'layouts/content/members-area.html.twig' %}
+
+{% block title %}{{ 'Working Times'|trans }} | {{ user }} | {{ 'Users'|trans }} | {{ parent() }}{% endblock %}
+
+{% block main %}
+	<h1>
+		{{ 'Working Times'|trans }}
+        <br />
+		<small>{{ user }}</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li>
+			<a href="{{ url('members-area') }}">
+				{{ 'Home' | trans }}
+			</a>
+		</li>
+        <li>
+			<a href="{{ url('members-area.users') }}">
+				{{ 'Users' | trans }}
+			</a>
+		</li>
+        <li>
+			<a href="{{ url('members-area.users.edit', { id: user.getId() }) }}">
+				{{ user }}
+			</a>
+		</li>
+		<li class="active">
+			{{ 'Working Times' | trans }}
+		</li>
+	</ol>
+	<div class="table-responsive">
+		<table class="table table-striped table-condensed">
+			<thead>
+				<tr>
+					<th>{{ paginator_sortable(pagination, 'Time Started', 'wt.timeStarted') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Time Ended', 'wt.timeEnded') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Notes', 'wt.notes') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Location', 'wt.location') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Time Created', 'wt.timeCreated') }}</th>
+					<th>{{ paginator_sortable(pagination, 'Time Updated', 'wt.timeUpdated') }}</th>
+					<th width="100">{{ 'Actions'|trans }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for workingTime in pagination.getItems() %}
+					<tr>
+						<td>{{ workingTime.getTimeStarted()|date(app.dateTimeFormat) }}</td>
+						<td>{{ workingTime.getTimeEnded()
+							? workingTime.getTimeEnded()|date(app.dateTimeFormat)
+							: '' }}</td>
+						<td>{{ workingTime.getNotes() }}</td>
+						<td>{{ workingTime.getLocation() }}</td>
+						<td>{{ workingTime.getTimeCreated()|date(app.dateTimeFormat) }}</td>
+						<td>{{ workingTime.getTimeUpdated()|date(app.dateTimeFormat) }}</td>
+						<td>
+							<a class="btn btn-sm btn-default filter-submit margin-bottom"
+								data-toggle="tooltip" title="{{ 'Edit'|trans }}"
+								href="{{ url('members-area.working-times.edit', { id : workingTime.getId() }) }}">
+								<i class="fa fa-fw fa-cog"></i>
+							</a>
+							<a class="btn btn-sm btn-default filter-submit margin-bottom"
+								data-toggle="tooltip" title="{{ 'Remove'|trans }}"
+								href="{{ url('members-area.working-times.remove', { id : workingTime.getId() }) }}">
+								<i class="fa fa-fw fa-times"></i>
+							</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="99">{{ 'No working times yet'|trans }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{{ paginator_render(pagination) }}
+{% endblock %}
